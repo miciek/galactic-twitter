@@ -4,6 +4,7 @@ import com.michalplachta.galactic.values.Citizen
 
 import scala.concurrent.Future
 import scala.util.Random
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
  * A simulation of a client for a very slow database. Some calls may also fail with an exception ;)
@@ -11,11 +12,7 @@ import scala.util.Random
 object DbClient {
   private val clones = List.range(1, 100).map("Stormtrooper #" + _).map(Citizen)
   private val mainCharacters = List("Darth Vader", "Luke Skywalker", "Princess Leia", "Han Solo", "Ben Solo", "Emperor", "Obi-wan Kenobi").map(Citizen)
-  private val citizens = (mainCharacters ++ clones)
-
-  def getCitizensCount(): Future[Int] = {
-    simulateResponse(citizens.length)
-  }
+  private val citizens = mainCharacters ++ clones
 
   def findCitizenByName(name: String): Future[Citizen] = {
     citizens.find(_.name == name) match {
@@ -42,12 +39,16 @@ object DbClient {
   }
 
   private def simulateResponse[R](result: R): Future[R] = {
-    Thread.sleep(4000)
-    Future.successful(result)
+    Future {
+      Thread.sleep(4000)
+      result
+    }
   }
 
   private def simulateBadRequest[R](error: String): Future[R] = {
-    Thread.sleep(2000)
-    Future.failed(new Exception(s"Bad Request: $error"))
+    Future {
+      Thread.sleep(2000)
+      throw new Exception(s"Bad Request: $error")
+    }
   }
 }
