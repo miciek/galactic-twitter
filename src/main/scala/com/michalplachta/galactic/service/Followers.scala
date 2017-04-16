@@ -5,21 +5,30 @@ import com.michalplachta.galactic.values.Citizen
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.Try
 
 object Followers {
-  private var followers: Map[String, Int] = Map.empty
+  private var cachedFollowers: Map[String, Int] = Map.empty
+  private var cachedTriedFollowers: Map[String, Try[Int]] = Map.empty
 
   // PROBLEM #1: treating 0 as "no value yet"
-  def getFollowersCount(name: String): Int = {
+  def getFollowers(name: String): Int = {
     updateFollowersCacheAsync(name)
-    val cachedResult: Option[Int] = followers.get(name)
+    val cachedResult: Option[Int] = cachedFollowers.get(name)
     cachedResult.getOrElse(0)
   }
 
   // SOLUTION #1: explicit return type
-  def getCachedFollowersCount(name: String): Option[Int] = {
+  // PROBLEM #2: not handling failures
+  def getCachedFollowers(name: String): Option[Int] = {
     updateFollowersCacheAsync(name)
-    followers.get(name)
+    cachedFollowers.get(name)
+  }
+
+  // SOLUTION #2: explicit return type
+  def getCachedTriedFollowers(name: String): Option[Try[Int]] = {
+    updateFollowersCacheAsync(name)
+    cachedTriedFollowers.get(name)
   }
 
   private def updateFollowersCacheAsync(name: String): Unit = {
@@ -28,7 +37,10 @@ object Followers {
       citizen ⇒ DbClient.getFollowers(citizen).mapTo[List[Citizen]].map(_.length)
     }
     futureResult.foreach { result ⇒
-      followers += (name → result)
+      cachedFollowers += (name → result)
+    }
+    futureResult.onComplete { result ⇒
+      cachedTriedFollowers += (name → result)
     }
   }
 }

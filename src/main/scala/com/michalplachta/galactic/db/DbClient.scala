@@ -21,14 +21,6 @@ object DbClient {
     }
   }
 
-  def getCitizens(from: Int, until: Int): Future[List[Citizen]] = {
-    if (from < 0) simulateBadRequest("from cannot be negative")
-    else if (until < 0) simulateBadRequest("until cannot be negative")
-    else if (from >= until) simulateBadRequest("until must be bigger than from")
-    else if (until > citizens.length) simulateBadRequest("until cannot be bigger than number of citizens")
-    else simulateResponse(citizens.slice(from, until))
-  }
-
   def getFollowers(citizen: Citizen): Future[List[Citizen]] = {
     val followers = citizen.name match {
       case "Darth Vader"    ⇒ clones
