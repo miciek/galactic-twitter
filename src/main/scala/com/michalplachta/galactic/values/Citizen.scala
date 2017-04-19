@@ -1,3 +1,15 @@
 package com.michalplachta.galactic.values
 
-case class Citizen(name: String)
+sealed trait Citizen { val name: String }
+
+object Citizen {
+  case class Jedi(name: String) extends Citizen
+
+  case class Sith(name: String) extends Citizen
+
+  case class Stormtrooper(name: String, cloned: Boolean) extends Citizen
+
+  case class Rebel(name: String) extends Citizen
+
+  case class Civil(name: String) extends Citizen
+}

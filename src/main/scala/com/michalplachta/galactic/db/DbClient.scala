@@ -1,6 +1,7 @@
 package com.michalplachta.galactic.db
 
 import com.michalplachta.galactic.values.Citizen
+import com.michalplachta.galactic.values.Citizen._
 
 import scala.concurrent.Future
 import scala.util.Random
@@ -10,9 +11,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
  * A simulation of a client for a very slow database. Some calls may also fail with an exception ;)
  */
 object DbClient {
-  private val clones = List.range(1, 100).map("Stormtrooper #" + _).map(Citizen)
-  private val mainCharacters = List("Darth Vader", "Luke Skywalker", "Princess Leia", "Han Solo", "Ben Solo", "Emperor", "Obi-wan Kenobi").map(Citizen)
-  private val citizens = mainCharacters ++ clones
+  private val clones = List.range(1, 100).map("Clone Trooper #" + _).map(Stormtrooper(_, cloned = true))
+  private val siths = List("Darth Vader", "Emperor", "Ben Solo").map(Sith)
+  private val jedis = List("Luke Skywalker", "Obi-wan Kenobi").map(Jedi)
+  private val rebels = List("Princess Leia", "Han Solo").map(Rebel)
+  private val citizens = siths ++ jedis ++ rebels ++ clones
 
   def findCitizenByName(name: String): Future[Citizen] = {
     citizens.find(_.name == name) match {
@@ -23,8 +26,8 @@ object DbClient {
 
   def getFollowers(citizen: Citizen): Future[List[Citizen]] = {
     val followers = citizen.name match {
-      case "Darth Vader"    ⇒ clones
-      case "Luke Skywalker" ⇒ mainCharacters
+      case "Darth Vader"    ⇒ siths ++ clones
+      case "Luke Skywalker" ⇒ jedis ++ rebels
       case _                ⇒ citizens.slice(Random.nextInt(citizens.size), citizens.size)
     }
     simulateResponse(followers)

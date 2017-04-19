@@ -2,6 +2,7 @@ package com.michalplachta.galactic.service
 
 import com.michalplachta.galactic.db.DbClient
 import com.michalplachta.galactic.values.Citizen
+import com.michalplachta.galactic.values.Citizen.Stormtrooper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -31,10 +32,19 @@ object Followers {
     cachedTriedFollowers.get(name)
   }
 
+  // SOLUTION #3: Traversable + pattern matching
+  private def sumFollowers(allFollowers: List[Citizen]): Int = {
+    allFollowers.count {
+      case Stormtrooper(_, true) ⇒ false
+      case _                     ⇒ true
+    }
+  }
+
   private def updateFollowersCacheAsync(name: String): Unit = {
     val futureCitizen: Future[Citizen] = DbClient.findCitizenByName(name)
     val futureResult: Future[Int] = futureCitizen.flatMap {
-      citizen ⇒ DbClient.getFollowers(citizen).mapTo[List[Citizen]].map(_.length)
+      // PROBLEM #3: clones are counted as followers (`.map(_.length)`)
+      citizen ⇒ DbClient.getFollowers(citizen).mapTo[List[Citizen]].map(sumFollowers)
     }
     futureResult.foreach { result ⇒
       cachedFollowers += (name → result)
