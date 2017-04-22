@@ -1,40 +1,25 @@
 package com.michalplachta.galactic
 
-import com.michalplachta.galactic.service.Followers
 import com.michalplachta.galactic.service.Followers.{ Failed, Fetched, Loading, NotRequestedYet }
+import com.michalplachta.galactic.service.{ Followers, RemoteData, Tweets }
+import com.michalplachta.galactic.values.Tweet
 
 import scala.annotation.tailrec
-import scala.util.{ Failure, Success }
 
 object GalacticTwitterApp extends App {
   @tailrec
-  def printFollowersCount(getFollowersDescription: String ⇒ String): Unit = {
+  def runConsoleTwitter(): Unit = {
     println("Enter Citizen's name: ")
     val name = io.StdIn.readLine()
     println(s"Getting followers for $name")
-    val followersDescription = getFollowersDescription(name)
+    val followersDescription = getFollowersText(name)
+    val tweets = getTweetWall(name)
     println(s"$name has $followersDescription followers!")
-    printFollowersCount(getFollowersDescription)
+    println(s"$name's Tweet Wall: $tweets")
+    runConsoleTwitter()
   }
 
-  def getAndDescribe(name: String): String = {
-    Followers.getFollowers(name).toString
-  }
-
-  def getAndDescribeUsingCache(name: String): String = {
-    val cachedFollowers = Followers.getCachedFollowers(name)
-    cachedFollowers.map(_.toString).getOrElse("(not available)")
-  }
-
-  def getAndDescribeUsingCacheWithFailures(name: String): String = {
-    val triedFollowers = Followers.getCachedTriedFollowers(name)
-    triedFollowers map {
-      case Success(followers) ⇒ followers.toString
-      case Failure(ex)        ⇒ s"(failed to get followers: ${ex.toString})"
-    } getOrElse "(not available)"
-  }
-
-  def getAndDescribeUsingADTs(name: String): String = {
+  def getFollowersText(name: String): String = {
     val remoteFollowers: Followers.RemoteFollowersData = Followers.getRemoteFollowers(name)
     remoteFollowers match {
       case NotRequestedYet() ⇒ "(not requested yet)"
@@ -44,5 +29,15 @@ object GalacticTwitterApp extends App {
     }
   }
 
-  printFollowersCount(getAndDescribeUsingADTs)
+  def getTweetWall(name: String): String = {
+    val remoteFollowers: RemoteData[List[Tweet]] = Tweets.getTweetsFor(name)
+    remoteFollowers match {
+      case RemoteData.NotRequestedYet() ⇒ "(not requested yet)"
+      case RemoteData.Loading()         ⇒ "(loading...)"
+      case RemoteData.Fetched(tweets)   ⇒ tweets.foldLeft("")((wall, t) ⇒ s"$wall\n${t.author.name}: ${t.text}")
+      case RemoteData.Failed(ex)        ⇒ s"(failed to get tweets: ${ex.toString})"
+    }
+  }
+
+  runConsoleTwitter()
 }
