@@ -3,7 +3,7 @@ package com.michalplachta.galactic.service
 import com.michalplachta.galactic.db.DbClient
 import com.michalplachta.galactic.internal.PredicateLogic._
 import com.michalplachta.galactic.service.Censorship._
-import com.michalplachta.galactic.service.RemoteData.{ Failed, Fetched, NotRequestedYet }
+import com.michalplachta.galactic.service.RemoteData.{ Failed, Fetched, Loading, NotRequestedYet }
 import com.michalplachta.galactic.values.Tweet
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -15,6 +15,7 @@ object Tweets {
   val maxCensorshipManipulations = 2
 
   def getTweetsFor(citizenName: String): RemoteData[List[Tweet]] = {
+    if (cachedTweetsFor.get(citizenName).isEmpty) cachedTweetsFor += (citizenName → Loading())
     val futureTweets: Future[List[Tweet]] = for {
       citizen ← DbClient.findCitizenByName(citizenName)
       tweets ← DbClient.getTweetsFor(citizen)
