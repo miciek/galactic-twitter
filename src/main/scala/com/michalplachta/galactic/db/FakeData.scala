@@ -1,7 +1,7 @@
 package com.michalplachta.galactic.db
 
-import com.michalplachta.galactic.values.{ Citizen, Tweet }
 import com.michalplachta.galactic.values.Citizen._
+import com.michalplachta.galactic.values.Tweet
 
 object FakeData {
   val clones = List.range(1, 100).map("Clone Trooper #" + _).map(Stormtrooper(_, cloned = true))

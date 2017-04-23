@@ -1,10 +1,8 @@
 package com.michalplachta.galactic.http
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import com.michalplachta.galactic.service.RemoteData
 import com.michalplachta.galactic.service.RemoteData._
-import spray.json.{ DefaultJsonProtocol, JsObject, JsValue, RootJsonFormat }
-import spray.json._
+import spray.json.{ DefaultJsonProtocol, JsObject, JsValue, RootJsonFormat, _ }
 
 trait RemoteDataJsonSupport extends DefaultJsonProtocol {
   implicit def notRequestedYetJson[A: JsonFormat] = jsonFormat0(NotRequestedYet.apply[A])

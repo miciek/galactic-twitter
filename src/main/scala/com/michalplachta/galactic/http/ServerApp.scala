@@ -1,7 +1,7 @@
 package com.michalplachta.galactic.http
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.server.{HttpApp, Route}
+import akka.http.scaladsl.server.{ HttpApp, Route }
 import com.michalplachta.galactic.service.Followers
 import spray.json._
 
