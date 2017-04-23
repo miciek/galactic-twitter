@@ -4,7 +4,7 @@ import com.michalplachta.galactic.values.Citizen
 import com.michalplachta.galactic.values.Citizen._
 import spray.json._
 
-trait JsonSupportForCitizen extends DefaultJsonProtocol {
+trait CitizenJsonSupport extends DefaultJsonProtocol {
   implicit val jediJson = jsonFormat1(Jedi)
   implicit val sithJson = jsonFormat1(Sith)
   implicit val stormtrooperJson = jsonFormat2(Stormtrooper)

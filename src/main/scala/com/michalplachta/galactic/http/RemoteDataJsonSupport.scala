@@ -6,7 +6,7 @@ import com.michalplachta.galactic.service.RemoteData._
 import spray.json.{ DefaultJsonProtocol, JsObject, JsValue, RootJsonFormat }
 import spray.json._
 
-trait JsonSupportForRemoteData extends DefaultJsonProtocol with SprayJsonSupport {
+trait RemoteDataJsonSupport extends DefaultJsonProtocol {
   implicit def notRequestedYetJson[A: JsonFormat] = jsonFormat0(NotRequestedYet.apply[A])
   implicit def loadingJson[A: JsonFormat] = jsonFormat0(Loading.apply[A])
   implicit def failedJson[A: JsonFormat] = jsonFormat1(Failed.apply[A])
