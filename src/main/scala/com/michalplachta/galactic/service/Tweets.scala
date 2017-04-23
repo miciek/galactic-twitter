@@ -24,7 +24,7 @@ object Tweets {
       val value: RemoteData[List[Tweet]] =
         result match {
           case Success(followers) ⇒ Fetched(followers)
-          case Failure(t)         ⇒ Failed(t)
+          case Failure(t)         ⇒ Failed(t.toString)
         }
       cachedTweetsFor += (citizenName → value)
     }

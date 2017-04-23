@@ -12,12 +12,13 @@ object Followers {
   sealed trait RemoteFollowersData
   final case class NotRequestedYet() extends RemoteFollowersData
   final case class Loading() extends RemoteFollowersData
-  final case class Failed(throwable: Throwable) extends RemoteFollowersData
+  final case class Failed(errorMessage: String) extends RemoteFollowersData
   final case class Fetched(followers: Int) extends RemoteFollowersData
 
   private var cachedFollowers: Map[String, Int] = Map.empty
   private var cachedTriedFollowers: Map[String, Try[Int]] = Map.empty
   private var cachedRemoteFollowers: Map[String, RemoteFollowersData] = Map.empty
+  private var cachedRemoteFollowersGeneric: Map[String, RemoteData[Int]] = Map.empty
 
   // PROBLEM #1: treating 0 as "no value yet"
   def getFollowers(name: String): Int = {
@@ -46,6 +47,11 @@ object Followers {
     cachedRemoteFollowers.getOrElse(name, NotRequestedYet())
   }
 
+  def getRemoteFollowersGeneric(name: String): RemoteData[Int] = {
+    updateFollowersCacheAsync(name)
+    cachedRemoteFollowersGeneric.getOrElse(name, RemoteData.NotRequestedYet())
+  }
+
   // PROBLEM #3: clones are counted as followers
   // SOLUTION #3: Traversable + pattern matching
   private def sumFollowers(allFollowers: List[Citizen]): Int = {
@@ -58,6 +64,7 @@ object Followers {
 
   private def updateFollowersCacheAsync(name: String): Unit = {
     if (cachedRemoteFollowers.get(name).isEmpty) cachedRemoteFollowers += (name → Loading())
+    if (cachedRemoteFollowersGeneric.get(name).isEmpty) cachedRemoteFollowersGeneric += (name → RemoteData.Loading())
     val futureCitizen: Future[Citizen] = DbClient.findCitizenByName(name)
     val futureResult: Future[Int] = futureCitizen.flatMap {
       citizen ⇒ DbClient.getFollowers(citizen).mapTo[List[Citizen]].map(sumFollowers)
@@ -70,9 +77,15 @@ object Followers {
       val value: RemoteFollowersData =
         result match {
           case Success(followers) ⇒ Fetched(followers)
-          case Failure(t)         ⇒ Failed(t)
+          case Failure(t)         ⇒ Failed(t.toString)
+        }
+      val valueGeneric: RemoteData[Int] =
+        result match {
+          case Success(followers) ⇒ RemoteData.Fetched(followers)
+          case Failure(t)         ⇒ RemoteData.Failed(t.toString)
         }
       cachedRemoteFollowers += (name → value)
+      cachedRemoteFollowersGeneric += (name → valueGeneric)
     }
   }
 }

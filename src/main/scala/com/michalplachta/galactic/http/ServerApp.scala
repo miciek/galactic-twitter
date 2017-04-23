@@ -2,19 +2,14 @@ package com.michalplachta.galactic.http
 
 import akka.http.scaladsl.server.{ HttpApp, Route }
 import com.michalplachta.galactic.service.Followers
-import com.michalplachta.galactic.service.Followers.Fetched
+import spray.json._
 
-object ServerApp extends App {
+object ServerApp extends App with JsonSupportForRemoteData {
   object WebServer extends HttpApp {
     def route: Route =
       path("followers" / Segment) { citizenName ⇒
         get {
-          complete {
-            Followers.getRemoteFollowers(citizenName) match {
-              case Fetched(followers) ⇒ followers.toString
-              case _                  ⇒ "not yet"
-            }
-          }
+          complete(Followers.getRemoteFollowersGeneric(citizenName).toJson)
         }
       }
   }

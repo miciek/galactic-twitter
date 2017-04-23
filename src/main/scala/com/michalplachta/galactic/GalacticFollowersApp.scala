@@ -29,18 +29,18 @@ object GalacticFollowersApp extends App {
   def getAndDescribeUsingCacheWithFailures(name: String): String = {
     val triedFollowers = Followers.getCachedTriedFollowers(name)
     triedFollowers map {
-      case Success(followers) ⇒ followers.toString
-      case Failure(ex)        ⇒ s"(failed to get followers: ${ex.toString})"
+      case Success(followers)    ⇒ followers.toString
+      case Failure(errorMessage) ⇒ s"(failed to get followers: $errorMessage)"
     } getOrElse "(not available)"
   }
 
   def getAndDescribeUsingADTs(name: String): String = {
     val remoteFollowers: Followers.RemoteFollowersData = Followers.getRemoteFollowers(name)
     remoteFollowers match {
-      case NotRequestedYet() ⇒ "(not requested yet)"
-      case Loading()         ⇒ "(loading...)"
-      case Fetched(count)    ⇒ count.toString
-      case Failed(ex)        ⇒ s"(failed to get followers: ${ex.toString})"
+      case NotRequestedYet()    ⇒ "(not requested yet)"
+      case Loading()            ⇒ "(loading...)"
+      case Fetched(count)       ⇒ count.toString
+      case Failed(errorMessage) ⇒ s"(failed to get followers: $errorMessage)"
     }
   }
 

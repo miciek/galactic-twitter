@@ -22,20 +22,20 @@ object GalacticTwitterApp extends App {
   def getFollowersText(name: String): String = {
     val remoteFollowers: Followers.RemoteFollowersData = Followers.getRemoteFollowers(name)
     remoteFollowers match {
-      case NotRequestedYet() ⇒ "(not requested yet)"
-      case Loading()         ⇒ "(loading...)"
-      case Fetched(count)    ⇒ count.toString
-      case Failed(ex)        ⇒ s"(failed to get followers: ${ex.toString})"
+      case NotRequestedYet()    ⇒ "(not requested yet)"
+      case Loading()            ⇒ "(loading...)"
+      case Fetched(count)       ⇒ count.toString
+      case Failed(errorMessage) ⇒ s"(failed to get followers: $errorMessage)"
     }
   }
 
   def getTweetWall(name: String): String = {
     val remoteFollowers: RemoteData[List[Tweet]] = Tweets.getTweetsFor(name)
     remoteFollowers match {
-      case RemoteData.NotRequestedYet() ⇒ "(not requested yet)"
-      case RemoteData.Loading()         ⇒ "(loading...)"
-      case RemoteData.Fetched(tweets)   ⇒ tweets.foldLeft("")((wall, t) ⇒ s"$wall\n${t.author.name}: ${t.text}")
-      case RemoteData.Failed(ex)        ⇒ s"(failed to get tweets: ${ex.toString})"
+      case RemoteData.NotRequestedYet()    ⇒ "(not requested yet)"
+      case RemoteData.Loading()            ⇒ "(loading...)"
+      case RemoteData.Fetched(tweets)      ⇒ tweets.foldLeft("")((wall, t) ⇒ s"$wall\n${t.author.name}: ${t.text}")
+      case RemoteData.Failed(errorMessage) ⇒ s"(failed to get tweets: $errorMessage)"
     }
   }
 
