@@ -1,7 +1,7 @@
 package com.michalplachta.galactic
 
-import com.michalplachta.galactic.service.Followers.{ Failed, Fetched, Loading, NotRequestedYet }
-import com.michalplachta.galactic.service.{ Followers, RemoteData, Tweets }
+import com.michalplachta.galactic.service.RemoteData._
+import com.michalplachta.galactic.service.{Followers, RemoteData, Tweets}
 import com.michalplachta.galactic.values.Tweet
 
 import scala.annotation.tailrec
@@ -20,7 +20,7 @@ object GalacticTwitterApp extends App {
   }
 
   def getFollowersText(name: String): String = {
-    val remoteFollowers: Followers.RemoteFollowersData = Followers.getRemoteFollowers(name)
+    val remoteFollowers: RemoteData[Int] = Followers.getRemoteFollowersGeneric(name)
     remoteFollowers match {
       case NotRequestedYet()    ⇒ "(not requested yet)"
       case Loading()            ⇒ "(loading...)"
@@ -32,10 +32,10 @@ object GalacticTwitterApp extends App {
   def getTweetWall(name: String): String = {
     val remoteFollowers: RemoteData[List[Tweet]] = Tweets.getTweetsFor(name)
     remoteFollowers match {
-      case RemoteData.NotRequestedYet()    ⇒ "(not requested yet)"
-      case RemoteData.Loading()            ⇒ "(loading...)"
-      case RemoteData.Fetched(tweets)      ⇒ tweets.foldLeft("")((wall, t) ⇒ s"$wall\n${t.author.name}: ${t.text}")
-      case RemoteData.Failed(errorMessage) ⇒ s"(failed to get tweets: $errorMessage)"
+      case NotRequestedYet()    ⇒ "(not requested yet)"
+      case Loading()            ⇒ "(loading...)"
+      case Fetched(tweets)      ⇒ tweets.foldLeft("")((wall, t) ⇒ s"$wall\n${t.author.name}: ${t.text}")
+      case Failed(errorMessage) ⇒ s"(failed to get tweets: $errorMessage)"
     }
   }
 
