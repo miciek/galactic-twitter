@@ -11,13 +11,18 @@ resolvers += Resolver.jcenterRepo
 libraryDependencies ++= {
   val akkaV = "2.4.17"
   val akkaHttpV = "10.0.5"
+  val javaslangV = "2.0.6"
+  val lombokV = "1.16.16"
   val configV = "1.3.1"
-  val scalatestV = "3.0.1"
   val logbackV = "1.1.5"
+  val scalatestV = "3.0.1"
   Seq(
     "com.typesafe.akka" %% "akka-actor" % akkaV,
     "com.typesafe.akka" %% "akka-http" % akkaHttpV,
     "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpV,
+    "com.typesafe.akka" %% "akka-http-jackson" % akkaHttpV,
+    "io.javaslang" % "javaslang" % javaslangV,
+    "org.projectlombok" % "lombok" % lombokV,
     "com.typesafe" % "config" % configV,
     "com.typesafe.akka" %% "akka-slf4j" % akkaV,
     "ch.qos.logback" % "logback-classic" % logbackV,
@@ -25,9 +30,6 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-testkit" % akkaV % Test
   )
 }
-
-fork := true
-connectInput in run := true
 
 import scalariform.formatter.preferences._
 import com.typesafe.sbt.SbtScalariform
