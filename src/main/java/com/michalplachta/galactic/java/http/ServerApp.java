@@ -8,7 +8,10 @@ import akka.http.javadsl.model.StatusCodes;
 import akka.http.javadsl.server.Route;
 import akka.stream.ActorMaterializer;
 import com.michalplachta.galactic.java.service.Followers;
+import com.michalplachta.galactic.java.service.Tweets;
+import com.michalplachta.galactic.java.values.Tweet;
 
+import java.util.List;
 import java.util.function.Function;
 
 import static akka.http.javadsl.server.Directives.*;
@@ -21,13 +24,22 @@ public class ServerApp {
             return complete(StatusCodes.OK, followers, Jackson.marshaller());
         };
 
+        Function<String, Route> getTweets = citizenName -> {
+            List<Tweet> followers = Tweets.getTweetsFor(citizenName).toJavaList();
+            return complete(StatusCodes.OK, followers, Jackson.marshaller());
+        };
+
         return route(
                 pathPrefix("followers",
                         () -> path(STRING,
                                 citizenName -> route(get(() -> getFollowers.apply(citizenName)))
                         )
-                )
-        );
+                ),
+                pathPrefix("tweets",
+                        () -> path(STRING,
+                                citizenName -> route(get(() -> getTweets.apply(citizenName)))
+                        )
+                ));
     }
 
     public static void main(String[] args) {

@@ -1,6 +1,7 @@
 package com.michalplachta.galactic.java.db;
 
 import com.michalplachta.galactic.java.values.Citizen;
+import com.michalplachta.galactic.java.values.Tweet;
 import javaslang.collection.List;
 import javaslang.concurrent.Future;
 import javaslang.concurrent.Promise;
@@ -25,6 +26,11 @@ public class DbClient {
                 Case($(), () -> citizens.slice(citizens.indexOf(citizen), citizens.length()))
         );
         return simulateResponse(followers);
+    }
+
+    public static Future<List<Tweet>> getTweetsFor(Citizen citizen) {
+        List<Tweet> tweetsForCitizen = tweets.filter(t -> !t.author.equals(citizen));
+        return simulateResponse(tweetsForCitizen);
     }
 
     private static <R> Future<R> simulateResponse(R result) {
