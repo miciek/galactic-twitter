@@ -25,8 +25,8 @@ public class Followers {
     }
 
     private static void updateFollowersCacheAsync(String name) {
-        Future<Citizen> futureCitizen = DbClient.findCitizenByName(name);
-        Future<List<Citizen>> followersFuture = futureCitizen.flatMap(DbClient::getFollowers);
+        Future<? extends Citizen> futureCitizen = DbClient.findCitizenByName(name);
+        Future<List<? extends Citizen>> followersFuture = futureCitizen.flatMap(DbClient::getFollowers);
         followersFuture.forEach(newFollowers -> {
             cachedFollowers = cachedFollowers.put(name, newFollowers.length());
         });

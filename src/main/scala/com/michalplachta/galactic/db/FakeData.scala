@@ -1,15 +1,15 @@
 package com.michalplachta.galactic.db
 
 import com.michalplachta.galactic.values.Citizen._
-import com.michalplachta.galactic.values.Tweet
+import com.michalplachta.galactic.values.{ Citizen, Tweet }
 
 object FakeData {
   val clones = List.range(1, 100).map("Clone Trooper #" + _).map(Stormtrooper(_, cloned = true))
   val siths = List("Darth Vader", "Emperor", "Ben Solo").map(Sith)
   val jedis = List("Luke Skywalker", "Obi-Wan Kenobi", "Yoda").map(Jedi)
   val rebels = List("Princess Leia", "Han Solo").map(Rebel)
-  val citizens = siths ++ jedis ++ rebels ++ clones
-  val tweets = List(
+  val citizens: List[Citizen] = siths ++ jedis ++ rebels ++ clones
+  val tweets: List[Tweet] = List(
     Tweet("Who's the more foolish: the fool, or the fool who follows him?", Jedi("Obi-Wan Kenobi")),
     Tweet("I am Luke's father.", Sith("Darth Vader")),
     Tweet("It's true. All of it. The Dark Side, the Jedi. They're real.", Rebel("Han Solo")),

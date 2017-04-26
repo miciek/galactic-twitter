@@ -6,13 +6,13 @@ import javaslang.concurrent.Future;
 import javaslang.concurrent.Promise;
 
 public class DbClient {
-    public static Future<Citizen> findCitizenByName(String name) {
-        return FakeData.citizens.find(citizen -> citizen.getName().equals(name))
+    public static Future<? extends Citizen> findCitizenByName(String name) {
+        return FakeData.citizens.find(citizen -> citizen.name.equals(name))
                 .map(DbClient::simulateResponse)
                 .getOrElse(simulateBadRequest("citizen with name $name couldn't be found"));
     }
 
-    public static Future<List<Citizen>> getFollowers(Citizen citizen) {
+    public static Future<List<? extends Citizen>> getFollowers(Citizen citizen) {
         return simulateResponse(FakeData.citizens);
     }
 
