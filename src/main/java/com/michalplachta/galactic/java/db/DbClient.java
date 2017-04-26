@@ -5,15 +5,26 @@ import javaslang.collection.List;
 import javaslang.concurrent.Future;
 import javaslang.concurrent.Promise;
 
+import static com.michalplachta.galactic.java.db.FakeData.*;
+import static javaslang.API.*;
+
+/**
+ * A simulation of a client for a very slow database. Some calls may also fail with an exception ;)
+ */
 public class DbClient {
-    public static Future<? extends Citizen> findCitizenByName(String name) {
-        return FakeData.citizens.find(citizen -> citizen.name.equals(name))
+    public static Future<? extends Citizen> findCitizenByName(String citizenName) {
+        return citizens.find(citizen -> citizen.name.equals(citizenName))
                 .map(DbClient::simulateResponse)
-                .getOrElse(simulateBadRequest("citizen with name $name couldn't be found"));
+                .getOrElse(simulateBadRequest(String.format("citizen with name %s couldn't be found", citizenName)));
     }
 
     public static Future<List<? extends Citizen>> getFollowers(Citizen citizen) {
-        return simulateResponse(FakeData.citizens);
+        List<Citizen> followers = Match(citizen.name).of(
+                Case($("Darth Vader"), () -> siths.appendAll(clones)),
+                Case($("Luke Skywalker"), () -> jedis.appendAll(rebels)),
+                Case($(), () -> citizens.slice(citizens.indexOf(citizen), citizens.length()))
+        );
+        return simulateResponse(followers);
     }
 
     private static <R> Future<R> simulateResponse(R result) {

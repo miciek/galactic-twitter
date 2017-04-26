@@ -4,7 +4,6 @@ import com.michalplachta.galactic.values.{ Citizen, Tweet }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.Random
 
 /**
  * A simulation of a client for a very slow database. Some calls may also fail with an exception ;)
@@ -12,10 +11,10 @@ import scala.util.Random
 object DbClient {
   import com.michalplachta.galactic.db.FakeData._
 
-  def findCitizenByName(name: String): Future[Citizen] = {
-    citizens.find(_.name == name) match {
+  def findCitizenByName(citizenName: String): Future[Citizen] = {
+    citizens.find(_.name == citizenName) match {
       case Some(citizen) ⇒ simulateResponse(citizen)
-      case None          ⇒ simulateBadRequest(s"citizen with name $name couldn't be found")
+      case None          ⇒ simulateBadRequest(s"citizen with name $citizenName couldn't be found")
     }
   }
 
@@ -23,13 +22,13 @@ object DbClient {
     val followers = citizen.name match {
       case "Darth Vader"    ⇒ siths ++ clones
       case "Luke Skywalker" ⇒ jedis ++ rebels
-      case _                ⇒ citizens.slice(Random.nextInt(citizens.size), citizens.size)
+      case _                ⇒ citizens.slice(citizens.indexOf(citizen), citizens.size)
     }
     simulateResponse(followers)
   }
 
   def getTweetsFor(citizen: Citizen): Future[List[Tweet]] = {
-    val tweetsForCitizen = tweets.slice(Random.nextInt(tweets.size), tweets.size)
+    val tweetsForCitizen = tweets.filter(_.author != citizen)
     simulateResponse(tweetsForCitizen)
   }
 
