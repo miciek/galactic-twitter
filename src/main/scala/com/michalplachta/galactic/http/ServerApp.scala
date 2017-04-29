@@ -1,8 +1,8 @@
 package com.michalplachta.galactic.http
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.server.{ HttpApp, Route }
-import com.michalplachta.galactic.service.{ Followers, Tweets }
+import akka.http.scaladsl.server.{HttpApp, Route}
+import com.michalplachta.galactic.service.{Followers, Tweets}
 import spray.json._
 
 object ServerApp extends App with RemoteDataJsonSupport with TweetJsonSupport with SprayJsonSupport {
@@ -10,7 +10,7 @@ object ServerApp extends App with RemoteDataJsonSupport with TweetJsonSupport wi
     def route: Route =
       path("followers" / Segment) { citizenName ⇒
         get {
-          complete(Followers.getRemoteFollowersGeneric(citizenName).toJson)
+          complete(Followers.getFollowers(citizenName).toJson)
         }
       } ~
         path("tweets" / Segment) { citizenName ⇒

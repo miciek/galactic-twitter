@@ -20,7 +20,7 @@ object GalacticTwitterApp extends App {
   }
 
   def getFollowersText(name: String): String = {
-    val remoteFollowers: RemoteData[Int] = Followers.getRemoteFollowersGeneric(name)
+    val remoteFollowers: RemoteData[Int] = Followers.getFollowers(name)
     remoteFollowers match {
       case NotRequestedYet()    ⇒ "(not requested yet)"
       case Loading()            ⇒ "(loading...)"

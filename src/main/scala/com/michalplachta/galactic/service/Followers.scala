@@ -1,91 +1,109 @@
 package com.michalplachta.galactic.service
 
 import com.michalplachta.galactic.db.DbClient
+import com.michalplachta.galactic.service.RemoteData.Loading
 import com.michalplachta.galactic.values.Citizen
 import com.michalplachta.galactic.values.Citizen.Stormtrooper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.{ Failure, Success, Try }
+import scala.util.{Failure, Success, Try}
 
 object Followers {
-  sealed trait RemoteFollowersData
-  final case class NotRequestedYet() extends RemoteFollowersData
-  final case class Loading() extends RemoteFollowersData
-  final case class Failed(errorMessage: String) extends RemoteFollowersData
-  final case class Fetched(followers: Int) extends RemoteFollowersData
+  object Version1 {
+    private var cachedFollowers: Map[String, Int] = Map.empty
 
-  private var cachedFollowers: Map[String, Int] = Map.empty
-  private var cachedTriedFollowers: Map[String, Try[Int]] = Map.empty
-  private var cachedRemoteFollowers: Map[String, RemoteFollowersData] = Map.empty
+    // PROBLEM #1: treating 0 as "no value yet"
+    def getFollowers(citizenName: String): Int = {
+      getFollowersAsync(citizenName).foreach { result ⇒
+        cachedFollowers += (citizenName → result)
+      }
+
+      val cachedResult: Option[Int] = cachedFollowers.get(citizenName)
+      cachedResult.getOrElse(0)
+    }
+  }
+
+  object Version2 {
+    private var cachedFollowers: Map[String, Int] = Map.empty
+
+    // SOLUTION #1: explicit return type
+    // PROBLEM #2: not handling failures
+    def getCachedFollowers(citizenName: String): Option[Int] = {
+      getFollowersAsync(citizenName).foreach { result ⇒
+        cachedFollowers += (citizenName → result)
+      }
+      cachedFollowers.get(citizenName)
+    }
+  }
+
+  object Version3 {
+    private var cachedTriedFollowers: Map[String, Try[Int]] = Map.empty
+
+    // SOLUTION #2: explicit return type
+    // PROBLEM #4: cryptic return type
+    def getCachedTriedFollowers(citizenName: String): Option[Try[Int]] = {
+      getFollowersAsync(citizenName).onComplete { result ⇒
+        cachedTriedFollowers += (citizenName → result)
+      }
+      cachedTriedFollowers.get(citizenName)
+    }
+  }
+
+  object Version4 {
+    sealed trait RemoteFollowersData
+    final case class NotRequestedYet() extends RemoteFollowersData
+    final case class Loading() extends RemoteFollowersData
+    final case class Failed(errorMessage: String) extends RemoteFollowersData
+    final case class Fetched(followers: Int) extends RemoteFollowersData
+
+    private var cachedRemoteFollowers: Map[String, RemoteFollowersData] = Map.empty
+
+    // SOLUTION #4: use Algebraic Data Types to describe states
+    def getRemoteFollowers(citizenName: String): RemoteFollowersData = {
+      if (cachedRemoteFollowers.get(citizenName).isEmpty) cachedRemoteFollowers += (citizenName → Loading())
+      getFollowersAsync(citizenName).onComplete { result ⇒
+        val value: RemoteFollowersData =
+          result match {
+            case Success(followers) ⇒ Fetched(followers)
+            case Failure(t)         ⇒ Failed(t.toString)
+          }
+        cachedRemoteFollowers += (citizenName → value)
+      }
+      cachedRemoteFollowers.getOrElse(citizenName, NotRequestedYet())
+    }
+  }
+
+  // VERSION 5, final
   private var cachedRemoteFollowersGeneric: Map[String, RemoteData[Int]] = Map.empty
 
-  // PROBLEM #1: treating 0 as "no value yet"
-  def getFollowers(name: String): Int = {
-    updateFollowersCacheAsync(name)
-    val cachedResult: Option[Int] = cachedFollowers.get(name)
-    cachedResult.getOrElse(0)
-  }
-
-  // SOLUTION #1: explicit return type
-  // PROBLEM #2: not handling failures
-  def getCachedFollowers(name: String): Option[Int] = {
-    updateFollowersCacheAsync(name)
-    cachedFollowers.get(name)
-  }
-
-  // SOLUTION #2: explicit return type
-  // PROBLEM #4: cryptic return type
-  def getCachedTriedFollowers(name: String): Option[Try[Int]] = {
-    updateFollowersCacheAsync(name)
-    cachedTriedFollowers.get(name)
-  }
-
-  // SOLUTION #4: use Abstract Data Types to describe states
-  def getRemoteFollowers(name: String): RemoteFollowersData = {
-    updateFollowersCacheAsync(name)
-    cachedRemoteFollowers.getOrElse(name, NotRequestedYet())
-  }
-
-  def getRemoteFollowersGeneric(name: String): RemoteData[Int] = {
-    updateFollowersCacheAsync(name)
-    cachedRemoteFollowersGeneric.getOrElse(name, RemoteData.NotRequestedYet())
+  def getFollowers(citizenName: String): RemoteData[Int] = {
+    if (cachedRemoteFollowersGeneric.get(citizenName).isEmpty) cachedRemoteFollowersGeneric += (citizenName → Loading())
+    getFollowersAsync(citizenName).onComplete { result ⇒
+      val value: RemoteData[Int] =
+        result match {
+          case Success(followers) ⇒ RemoteData.Fetched(followers)
+          case Failure(t)         ⇒ RemoteData.Failed(t.toString)
+        }
+      cachedRemoteFollowersGeneric += (citizenName → value)
+    }
+    cachedRemoteFollowersGeneric.getOrElse(citizenName, RemoteData.NotRequestedYet())
   }
 
   // PROBLEM #3: clones are counted as followers
   // SOLUTION #3: Traversable + pattern matching
-  private def sumFollowers(allFollowers: List[Citizen]): Int = {
-    // allFollowers.length
-    allFollowers.count {
+  private def sumFollowers(followers: List[Citizen]): Int = {
+    // followers.length
+    followers.count {
       case Stormtrooper(_, true) ⇒ false
       case _                     ⇒ true
     }
   }
 
-  private def updateFollowersCacheAsync(name: String): Unit = {
-    if (cachedRemoteFollowers.get(name).isEmpty) cachedRemoteFollowers += (name → Loading())
-    if (cachedRemoteFollowersGeneric.get(name).isEmpty) cachedRemoteFollowersGeneric += (name → RemoteData.Loading())
+  private def getFollowersAsync(name: String): Future[Int] = {
     val futureCitizen: Future[Citizen] = DbClient.findCitizenByName(name)
-    val futureResult: Future[Int] = futureCitizen.flatMap {
+    futureCitizen.flatMap {
       citizen ⇒ DbClient.getFollowers(citizen).mapTo[List[Citizen]].map(sumFollowers)
-    }
-    futureResult.foreach { result ⇒
-      cachedFollowers += (name → result)
-    }
-    futureResult.onComplete { result ⇒
-      cachedTriedFollowers += (name → result)
-      val value: RemoteFollowersData =
-        result match {
-          case Success(followers) ⇒ Fetched(followers)
-          case Failure(t)         ⇒ Failed(t.toString)
-        }
-      val valueGeneric: RemoteData[Int] =
-        result match {
-          case Success(followers) ⇒ RemoteData.Fetched(followers)
-          case Failure(t)         ⇒ RemoteData.Failed(t.toString)
-        }
-      cachedRemoteFollowers += (name → value)
-      cachedRemoteFollowersGeneric += (name → valueGeneric)
     }
   }
 }
