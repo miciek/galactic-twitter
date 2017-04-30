@@ -7,7 +7,7 @@ import com.michalplachta.galactic.values.Citizen.Stormtrooper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 object Followers {
   object Version1 {
@@ -75,19 +75,19 @@ object Followers {
   }
 
   // VERSION 5, final
-  private var cachedRemoteFollowersGeneric: Map[String, RemoteData[Int]] = Map.empty
+  private var cache: Map[String, RemoteData[Int]] = Map.empty
 
   def getFollowers(citizenName: String): RemoteData[Int] = {
-    if (cachedRemoteFollowersGeneric.get(citizenName).isEmpty) cachedRemoteFollowersGeneric += (citizenName → Loading())
+    if (cache.get(citizenName).isEmpty) cache += (citizenName → Loading())
     getFollowersAsync(citizenName).onComplete { result ⇒
       val value: RemoteData[Int] =
         result match {
           case Success(followers) ⇒ RemoteData.Fetched(followers)
           case Failure(t)         ⇒ RemoteData.Failed(t.toString)
         }
-      cachedRemoteFollowersGeneric += (citizenName → value)
+      cache += (citizenName → value)
     }
-    cachedRemoteFollowersGeneric.getOrElse(citizenName, RemoteData.NotRequestedYet())
+    cache.getOrElse(citizenName, RemoteData.NotRequestedYet())
   }
 
   // PROBLEM #3: clones are counted as followers

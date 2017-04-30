@@ -9,6 +9,7 @@ import akka.http.javadsl.server.Route;
 import akka.stream.ActorMaterializer;
 import com.michalplachta.galactic.java.service.Followers;
 import com.michalplachta.galactic.java.service.Tweets;
+import com.michalplachta.galactic.java.service.remotedata.RemoteData;
 import com.michalplachta.galactic.java.values.Tweet;
 
 import java.util.List;
@@ -20,7 +21,7 @@ import static akka.http.javadsl.unmarshalling.StringUnmarshallers.STRING;
 public class ServerApp {
     private static Route appRoute() {
         Function<String, Route> getFollowers = citizenName -> {
-            Integer followers = Followers.getFollowers(citizenName);
+            RemoteData<Integer> followers = Followers.getFollowers(citizenName);
             return complete(StatusCodes.OK, followers, Jackson.marshaller());
         };
 
