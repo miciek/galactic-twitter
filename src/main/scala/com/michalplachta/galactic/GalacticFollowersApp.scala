@@ -27,8 +27,8 @@ object GalacticFollowersApp extends App {
   }
 
   def getAndDescribeUsingCacheWithFailures(name: String): String = {
-    val triedFollowers = Followers.Version3.getCachedTriedFollowers(name)
-    triedFollowers map {
+    val cachedTriedFollowers = Followers.Version3.getCachedTriedFollowers(name)
+    cachedTriedFollowers map {
       case Success(followers)    ⇒ followers.toString
       case Failure(errorMessage) ⇒ s"(failed to get followers: $errorMessage)"
     } getOrElse "(not available)"

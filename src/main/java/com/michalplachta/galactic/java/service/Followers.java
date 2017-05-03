@@ -10,7 +10,7 @@ import javaslang.concurrent.Future;
 import javaslang.control.Option;
 import javaslang.control.Try;
 
-import static com.michalplachta.galactic.java.internal.ValuePatterns.Stormtrooper;
+import static com.michalplachta.galactic.java.internal.CitizenPatterns.Stormtrooper;
 import static javaslang.API.*;
 import static javaslang.Patterns.Failure;
 import static javaslang.Patterns.Success;
@@ -33,7 +33,7 @@ public class Followers {
 
         // SOLUTION #1: explicit return type
         // PROBLEM #2: not handling failures
-        public static Option<Integer> getFollowers(String citizenName) {
+        public static Option<Integer> getCachedFollowers(String citizenName) {
             getFollowersAsync(citizenName).forEach(result -> {
                 cachedFollowers = cachedFollowers.put(citizenName, result);
             });
