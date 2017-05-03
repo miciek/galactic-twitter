@@ -21,6 +21,7 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpV,
     "com.typesafe.akka" %% "akka-http-jackson" % akkaHttpV,
     "io.javaslang" % "javaslang" % javaslangV,
+    "io.javaslang" % "javaslang-match" % javaslangV,
     "com.typesafe" % "config" % configV,
     "com.typesafe.akka" %% "akka-slf4j" % akkaV,
     "ch.qos.logback" % "logback-classic" % logbackV,

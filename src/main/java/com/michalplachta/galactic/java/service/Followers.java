@@ -10,6 +10,7 @@ import javaslang.concurrent.Future;
 import javaslang.control.Option;
 import javaslang.control.Try;
 
+import static com.michalplachta.galactic.java.internal.ValuePatterns.Stormtrooper;
 import static javaslang.API.*;
 import static javaslang.Patterns.Failure;
 import static javaslang.Patterns.Success;
@@ -107,8 +108,12 @@ public class Followers {
 
     // PROBLEM #3: clones are counted as followers
     // SOLUTION #3: Traversable + pattern matching
-    private static int sumFollowers(List<? extends Citizen> citizens) {
-        return 0;
+    private static int sumFollowers(List<? extends Citizen> followers) {
+        // return followers.size();
+        return followers.count(f -> Match(f).of(
+                Case(Stormtrooper($(), $(true)), false),
+                Case($(), true)
+        ));
     }
 
     private static Future<Integer> getFollowersAsync(String name) {

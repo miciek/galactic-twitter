@@ -93,7 +93,7 @@ object Followers {
   // PROBLEM #3: clones are counted as followers
   // SOLUTION #3: Traversable + pattern matching
   private def sumFollowers(followers: List[Citizen]): Int = {
-    // followers.length
+    //    followers.length
     followers.count {
       case Stormtrooper(_, true) ⇒ false
       case _                     ⇒ true
