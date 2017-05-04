@@ -38,7 +38,7 @@ public class Tweets {
     }
 
     // PROBLEM #5: Convoluted logic using IFs and vars
-    private static List<Tweet> censorTweets(List<Tweet> tweets) {
+    public static List<Tweet> censorTweets(List<Tweet> tweets) {
         return tweets.map(t -> {
             Tweet tweet = t;
             int manipulations = 0;
@@ -115,7 +115,7 @@ public class Tweets {
     );
 
     // SOLUTION #5: Logic as data, accumulator as state, folding data to run the logic
-    private static List<Tweet> censorTweetsUsingFilters(List<Tweet> tweets) {
+    public static List<Tweet> censorTweetsUsingFilters(List<Tweet> tweets) {
         return tweets.map(originalTweet -> {
             CensorStatus initialStatus = new CensorStatus(originalTweet, 0);
             return censorFilters.foldLeft(initialStatus, (status, filter) -> {

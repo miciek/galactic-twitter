@@ -1,13 +1,16 @@
 package com.michalplachta.galactic
 
-import com.michalplachta.galactic.db.{ FakeData ⇒ ScalaFakeData }
-import com.michalplachta.galactic.java.db.{ FakeData ⇒ JavaFakeData }
-import com.michalplachta.galactic.java.values.{ Civil, Jedi, Rebel, Sith, Stormtrooper, Citizen ⇒ JavaCitizen, Tweet ⇒ JavaTweet }
-import com.michalplachta.galactic.values.{ Citizen ⇒ ScalaCitizen, Tweet ⇒ ScalaTweet }
-import org.scalatest.{ Matchers, WordSpec }
+import com.michalplachta.galactic.db.{FakeData => ScalaFakeData}
+import com.michalplachta.galactic.java.db.{FakeData => JavaFakeData}
+import com.michalplachta.galactic.java.service.{Tweets => JavaTweets}
+import com.michalplachta.galactic.service.{Tweets => ScalaTweets}
+import com.michalplachta.galactic.java.values.{Civil, Jedi, Rebel, Sith, Stormtrooper, Citizen => JavaCitizen, Tweet => JavaTweet}
+import com.michalplachta.galactic.values.{Citizen => ScalaCitizen, Tweet => ScalaTweet}
+import org.scalatest.{Matchers, WordSpec}
 
 import scala.collection.JavaConverters._
 
+// testing that Java and Scala versions do the same things
 class VersionConsistencySpec extends WordSpec with Matchers {
   "Java and Scala versions" should {
     "have the same Citizen lists" in {
@@ -22,6 +25,14 @@ class VersionConsistencySpec extends WordSpec with Matchers {
         t ⇒ new JavaTweet(t.text, scalaCitizenToJavaCitizen(t.author))
       }
       javaTweets should equal(scalaTweets)
+    }
+
+    "have the same censored Tweet lists" in {
+      val javaCensoredTweets: Seq[JavaTweet] = JavaTweets.censorTweetsUsingFilters(JavaFakeData.tweets).toJavaList().asScala
+      val scalaCensoredTweets: Seq[JavaTweet] = ScalaTweets.censorTweetsUsingFilters(ScalaFakeData.tweets).map {
+        t ⇒ new JavaTweet(t.text, scalaCitizenToJavaCitizen(t.author))
+      }
+      javaCensoredTweets should equal(scalaCensoredTweets)
     }
   }
 
