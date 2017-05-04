@@ -1,6 +1,6 @@
 package com.michalplachta.galactic.java.internal;
 
-import com.michalplachta.galactic.java.service.Followers.Version4.*;
+import com.michalplachta.galactic.java.service.FollowersService.Version4.*;
 import javaslang.API;
 import javaslang.Tuple;
 import javaslang.Tuple1;

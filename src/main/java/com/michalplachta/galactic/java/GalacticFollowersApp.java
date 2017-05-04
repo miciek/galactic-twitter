@@ -1,7 +1,7 @@
 package com.michalplachta.galactic.java;
 
-import com.michalplachta.galactic.java.service.Followers;
-import com.michalplachta.galactic.java.service.Followers.Version4.RemoteFollowersData;
+import com.michalplachta.galactic.java.service.FollowersService;
+import com.michalplachta.galactic.java.service.FollowersService.Version4.RemoteFollowersData;
 import javaslang.control.Option;
 import javaslang.control.Try;
 
@@ -25,16 +25,16 @@ public class GalacticFollowersApp {
     }
 
     private static String getAndDescribe(String name) {
-        return Followers.Version1.getFollowers(name).toString();
+        return FollowersService.Version1.getFollowers(name).toString();
     }
 
     private static String getAndDescribeUsingCache(String name) {
-        Option<Integer> cachedFollowers = Followers.Version2.getCachedFollowers(name);
+        Option<Integer> cachedFollowers = FollowersService.Version2.getCachedFollowers(name);
         return cachedFollowers.map(Object::toString).getOrElse("(not available)");
     }
 
     private static String getAndDescribeUsingCacheWithFailures(String name) {
-        Option<Try<Integer>> cachedTriedFollowers = Followers.Version3.getCachedTriedFollowers(name);
+        Option<Try<Integer>> cachedTriedFollowers = FollowersService.Version3.getCachedTriedFollowers(name);
         return cachedTriedFollowers.map(triedFollowers -> Match(triedFollowers).of(
             Case(Success($()), Object::toString),
             Case(Failure($()), errorMessage -> String.format("(failed to get followers: %s)", errorMessage))
@@ -42,7 +42,7 @@ public class GalacticFollowersApp {
     }
 
     private static String getAndDescribeUsingADTs(String name) {
-        RemoteFollowersData remoteFollowers = Followers.Version4.getRemoteFollowers(name);
+        RemoteFollowersData remoteFollowers = FollowersService.Version4.getRemoteFollowers(name);
         return Match(remoteFollowers).of(
                 Case(NotRequestedYet(), "(not requested yet)"),
                 Case(Loading(), "(loading...)"),

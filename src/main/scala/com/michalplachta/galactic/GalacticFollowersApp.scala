@@ -1,7 +1,7 @@
 package com.michalplachta.galactic
 
-import com.michalplachta.galactic.service.Followers
-import com.michalplachta.galactic.service.Followers.Version4._
+import com.michalplachta.galactic.service.FollowersService
+import com.michalplachta.galactic.service.FollowersService.Version4._
 
 import scala.annotation.tailrec
 import scala.util.{ Failure, Success }
@@ -18,16 +18,16 @@ object GalacticFollowersApp extends App {
   }
 
   def getAndDescribe(name: String): String = {
-    Followers.Version1.getFollowers(name).toString
+    FollowersService.Version1.getFollowers(name).toString
   }
 
   def getAndDescribeUsingCache(name: String): String = {
-    val cachedFollowers = Followers.Version2.getCachedFollowers(name)
+    val cachedFollowers = FollowersService.Version2.getCachedFollowers(name)
     cachedFollowers.map(_.toString).getOrElse("(not available)")
   }
 
   def getAndDescribeUsingCacheWithFailures(name: String): String = {
-    val cachedTriedFollowers = Followers.Version3.getCachedTriedFollowers(name)
+    val cachedTriedFollowers = FollowersService.Version3.getCachedTriedFollowers(name)
     cachedTriedFollowers map {
       case Success(followers)    ⇒ followers.toString
       case Failure(errorMessage) ⇒ s"(failed to get followers: $errorMessage)"
@@ -35,7 +35,7 @@ object GalacticFollowersApp extends App {
   }
 
   def getAndDescribeUsingADTs(name: String): String = {
-    val remoteFollowers: RemoteFollowersData = Followers.Version4.getRemoteFollowers(name)
+    val remoteFollowers: RemoteFollowersData = FollowersService.Version4.getRemoteFollowers(name)
     remoteFollowers match {
       case NotRequestedYet()    ⇒ "(not requested yet)"
       case Loading()            ⇒ "(loading...)"

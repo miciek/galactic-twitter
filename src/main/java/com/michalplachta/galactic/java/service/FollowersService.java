@@ -1,21 +1,20 @@
 package com.michalplachta.galactic.java.service;
 
 import com.michalplachta.galactic.java.db.DbClient;
+import com.michalplachta.galactic.java.logic.Followers;
 import com.michalplachta.galactic.java.service.remotedata.*;
 import com.michalplachta.galactic.java.values.Citizen;
 import javaslang.collection.HashMap;
-import javaslang.collection.List;
 import javaslang.collection.Map;
 import javaslang.concurrent.Future;
 import javaslang.control.Option;
 import javaslang.control.Try;
 
-import static com.michalplachta.galactic.java.internal.CitizenPatterns.Stormtrooper;
 import static javaslang.API.*;
 import static javaslang.Patterns.Failure;
 import static javaslang.Patterns.Success;
 
-public class Followers {
+public class FollowersService {
     public static class Version1 {
         private static Map<String, Integer> cachedFollowers = HashMap.empty();
 
@@ -104,16 +103,6 @@ public class Followers {
             cache = cache.put(citizenName, value);
         });
         return cache.get(citizenName).getOrElse(new NotRequestedYet<Integer>());
-    }
-
-    // PROBLEM #3: clones are counted as followers
-    // SOLUTION #3: Traversable + pattern matching
-    private static int sumFollowers(List<? extends Citizen> followers) {
-        // return followers.size();
-        return followers.count(f -> Match(f).of(
-                Case(Stormtrooper($(), $(true)), false),
-                Case($(), true)
-        ));
     }
 
     private static Future<Integer> getFollowersAsync(String name) {

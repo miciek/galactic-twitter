@@ -1,15 +1,16 @@
 package com.michalplachta.galactic.service
 
 import com.michalplachta.galactic.db.DbClient
+import com.michalplachta.galactic.logic.Followers
+import com.michalplachta.galactic.logic.Followers.sumFollowers
 import com.michalplachta.galactic.service.RemoteData.Loading
 import com.michalplachta.galactic.values.Citizen
-import com.michalplachta.galactic.values.Citizen.Stormtrooper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{ Failure, Success, Try }
 
-object Followers {
+object FollowersService {
   object Version1 {
     private var cachedFollowers: Map[String, Int] = Map.empty
 
@@ -88,16 +89,6 @@ object Followers {
       cache += (citizenName → value)
     }
     cache.getOrElse(citizenName, RemoteData.NotRequestedYet())
-  }
-
-  // PROBLEM #3: clones are counted as followers
-  // SOLUTION #3: Traversable + pattern matching
-  private def sumFollowers(followers: List[Citizen]): Int = {
-    //    followers.length
-    followers.count {
-      case Stormtrooper(_, true) ⇒ false
-      case _                     ⇒ true
-    }
   }
 
   private def getFollowersAsync(name: String): Future[Int] = {
