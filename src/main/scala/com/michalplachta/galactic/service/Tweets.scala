@@ -11,26 +11,23 @@ import scala.concurrent.Future
 import scala.util.{ Failure, Success }
 
 object Tweets {
-  private var cachedTweetsFor: Map[String, RemoteData[List[Tweet]]] = Map.empty
+  private var cachedTweets: Map[String, RemoteData[List[Tweet]]] = Map.empty
   val maxCensorshipManipulations = 2
 
   def getTweetsFor(citizenName: String): RemoteData[List[Tweet]] = {
-    if (cachedTweetsFor.get(citizenName).isEmpty) cachedTweetsFor += (citizenName → Loading())
-    val futureTweets: Future[List[Tweet]] = for {
-      citizen ← DbClient.findCitizenByName(citizenName)
-      tweets ← DbClient.getTweetsFor(citizen)
-    } yield censorTweetsUsingFilters(tweets)
+    if (cachedTweets.get(citizenName).isEmpty) cachedTweets += (citizenName → Loading())
+    getTweetsAsync(citizenName)
+      .map(censorTweetsUsingFilters)
+      .onComplete { triedTweets ⇒
+        val remoteTweets: RemoteData[List[Tweet]] =
+          triedTweets match {
+            case Success(newTweets) ⇒ Fetched(newTweets)
+            case Failure(t)         ⇒ Failed(t.toString)
+          }
+        cachedTweets += (citizenName → remoteTweets)
+      }
 
-    futureTweets.onComplete { result ⇒
-      val value: RemoteData[List[Tweet]] =
-        result match {
-          case Success(followers) ⇒ Fetched(followers)
-          case Failure(t)         ⇒ Failed(t.toString)
-        }
-      cachedTweetsFor += (citizenName → value)
-    }
-
-    cachedTweetsFor.getOrElse(citizenName, NotRequestedYet())
+    cachedTweets.getOrElse(citizenName, NotRequestedYet())
   }
 
   // PROBLEM #5: Convoluted logic using IFs and vars
@@ -99,5 +96,12 @@ object Tweets {
           status
       }
     } map (_.tweet)
+  }
+
+  private def getTweetsAsync(citizenName: String): Future[List[Tweet]] = {
+    for {
+      citizen ← DbClient.findCitizenByName(citizenName)
+      tweets ← DbClient.getTweetsFor(citizen)
+    } yield tweets
   }
 }

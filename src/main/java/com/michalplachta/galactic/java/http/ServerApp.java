@@ -11,6 +11,7 @@ import com.michalplachta.galactic.java.service.Followers;
 import com.michalplachta.galactic.java.service.Tweets;
 import com.michalplachta.galactic.java.service.remotedata.RemoteData;
 import com.michalplachta.galactic.java.values.Tweet;
+import javaslang.Value;
 
 import java.util.List;
 import java.util.function.Function;
@@ -26,7 +27,7 @@ public class ServerApp {
         };
 
         Function<String, Route> getTweets = citizenName -> {
-            List<Tweet> followers = Tweets.getTweetsFor(citizenName).toJavaList();
+            RemoteData<List<Tweet>> followers = Tweets.getTweetsFor(citizenName).map(Value::toJavaList);
             return complete(StatusCodes.OK, followers, Jackson.marshaller());
         };
 
