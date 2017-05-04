@@ -1,4 +1,4 @@
-package com.michalplachta.galactic.java;
+package com.michalplachta.galactic.java.console;
 
 import com.michalplachta.galactic.java.service.FollowersService;
 import com.michalplachta.galactic.java.service.FollowersService.Version4.RemoteFollowersData;

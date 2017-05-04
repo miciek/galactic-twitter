@@ -1,4 +1,4 @@
-package com.michalplachta.galactic
+package com.michalplachta.galactic.console
 
 import com.michalplachta.galactic.service.FollowersService
 import com.michalplachta.galactic.service.FollowersService.Version4._
@@ -8,13 +8,13 @@ import scala.util.{ Failure, Success }
 
 object GalacticFollowersApp extends App {
   @tailrec
-  def runFollowersApp(getFollowersDescription: String ⇒ String): Unit = {
+  def runFollowersApp(getFollowersText: String ⇒ String): Unit = {
     println("Enter Citizen's name: ")
     val name = io.StdIn.readLine()
     println(s"Getting followers for $name")
-    val followersDescription = getFollowersDescription(name)
+    val followersDescription = getFollowersText(name)
     println(s"$name has $followersDescription followers!")
-    runFollowersApp(getFollowersDescription)
+    runFollowersApp(getFollowersText)
   }
 
   def getAndDescribe(name: String): String = {

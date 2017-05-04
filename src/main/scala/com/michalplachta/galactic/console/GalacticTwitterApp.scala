@@ -1,4 +1,4 @@
-package com.michalplachta.galactic
+package com.michalplachta.galactic.console
 
 import com.michalplachta.galactic.service.RemoteData._
 import com.michalplachta.galactic.service.{ FollowersService, RemoteData, TweetsService }
@@ -12,15 +12,15 @@ object GalacticTwitterApp extends App {
     println("Enter Citizen's name: ")
     val name = io.StdIn.readLine()
     println(s"Getting followers for $name")
-    val followersDescription = getFollowersText(name)
+    val followersText = getFollowersText(name)
     val tweets = getTweetWall(name)
-    println(s"$name has $followersDescription followers!")
+    println(s"$name has $followersText followers!")
     println(s"$name's Tweet Wall: $tweets")
     runConsoleTwitter()
   }
 
-  def getFollowersText(name: String): String = {
-    val remoteFollowers: RemoteData[Int] = FollowersService.getFollowers(name)
+  def getFollowersText(citizenName: String): String = {
+    val remoteFollowers: RemoteData[Int] = FollowersService.getFollowers(citizenName)
     remoteFollowers match {
       case NotRequestedYet()    ⇒ "(not requested yet)"
       case Loading()            ⇒ "(loading...)"
@@ -29,9 +29,9 @@ object GalacticTwitterApp extends App {
     }
   }
 
-  def getTweetWall(name: String): String = {
-    val remoteFollowers: RemoteData[List[Tweet]] = TweetsService.getTweetsFor(name)
-    remoteFollowers match {
+  def getTweetWall(citizenName: String): String = {
+    val remoteTweets: RemoteData[List[Tweet]] = TweetsService.getTweetsFor(citizenName)
+    remoteTweets match {
       case NotRequestedYet()    ⇒ "(not requested yet)"
       case Loading()            ⇒ "(loading...)"
       case Fetched(tweets)      ⇒ tweets.foldLeft("")((wall, t) ⇒ s"$wall\n${t.author.name}: ${t.text}")
