@@ -1,7 +1,7 @@
 package com.michalplachta.galactic
 
 import com.michalplachta.galactic.service.RemoteData._
-import com.michalplachta.galactic.service.{ Followers, RemoteData, Tweets }
+import com.michalplachta.galactic.service.{ Followers, RemoteData, TweetsService }
 import com.michalplachta.galactic.values.Tweet
 
 import scala.annotation.tailrec
@@ -30,7 +30,7 @@ object GalacticTwitterApp extends App {
   }
 
   def getTweetWall(name: String): String = {
-    val remoteFollowers: RemoteData[List[Tweet]] = Tweets.getTweetsFor(name)
+    val remoteFollowers: RemoteData[List[Tweet]] = TweetsService.getTweetsFor(name)
     remoteFollowers match {
       case NotRequestedYet()    ⇒ "(not requested yet)"
       case Loading()            ⇒ "(loading...)"

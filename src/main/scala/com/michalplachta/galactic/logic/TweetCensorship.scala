@@ -1,34 +1,11 @@
-package com.michalplachta.galactic.service
+package com.michalplachta.galactic.logic
 
-import com.michalplachta.galactic.db.DbClient
 import com.michalplachta.galactic.internal.PredicateLogic._
-import com.michalplachta.galactic.service.Censorship._
-import com.michalplachta.galactic.service.RemoteData.{ Failed, Fetched, Loading, NotRequestedYet }
+import com.michalplachta.galactic.logic.CensorshipFunctions._
 import com.michalplachta.galactic.values.Tweet
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import scala.util.{ Failure, Success }
-
-object Tweets {
-  private var cachedTweets: Map[String, RemoteData[List[Tweet]]] = Map.empty
-  val maxCensorshipManipulations = 2
-
-  def getTweetsFor(citizenName: String): RemoteData[List[Tweet]] = {
-    if (cachedTweets.get(citizenName).isEmpty) cachedTweets += (citizenName → Loading())
-    getTweetsAsync(citizenName)
-      .map(censorTweetsUsingFilters)
-      .onComplete { triedTweets ⇒
-        val remoteTweets: RemoteData[List[Tweet]] =
-          triedTweets match {
-            case Success(newTweets) ⇒ Fetched(newTweets)
-            case Failure(t)         ⇒ Failed(t.toString)
-          }
-        cachedTweets += (citizenName → remoteTweets)
-      }
-
-    cachedTweets.getOrElse(citizenName, NotRequestedYet())
-  }
+object TweetCensorship {
+  private val maxCensorshipManipulations = 2
 
   // PROBLEM #5: Convoluted logic using IFs and vars
   def censorTweets(tweets: List[Tweet]): List[Tweet] = {
@@ -96,12 +73,5 @@ object Tweets {
           status
       }
     } map (_.tweet)
-  }
-
-  private def getTweetsAsync(citizenName: String): Future[List[Tweet]] = {
-    for {
-      citizen ← DbClient.findCitizenByName(citizenName)
-      tweets ← DbClient.getTweetsFor(citizen)
-    } yield tweets
   }
 }

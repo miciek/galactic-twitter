@@ -1,41 +1,16 @@
-package com.michalplachta.galactic.java.service;
+package com.michalplachta.galactic.java.logic;
 
-import com.michalplachta.galactic.java.db.DbClient;
-import com.michalplachta.galactic.java.service.remotedata.*;
-import com.michalplachta.galactic.java.values.Citizen;
 import com.michalplachta.galactic.java.values.Tweet;
-import javaslang.collection.HashMap;
 import javaslang.collection.List;
-import javaslang.collection.Map;
-import javaslang.concurrent.Future;
 
 import java.util.function.Function;
 
 import static com.michalplachta.galactic.java.internal.PredicateLogic.and;
 import static com.michalplachta.galactic.java.internal.PredicateLogic.not;
-import static com.michalplachta.galactic.java.service.Censorship.*;
-import static javaslang.API.*;
-import static javaslang.Patterns.Failure;
-import static javaslang.Patterns.Success;
+import static com.michalplachta.galactic.java.logic.CensorshipFunctions.*;
 
-public class Tweets {
-    private static Map<String, RemoteData<List<Tweet>>> cachedTweets = HashMap.empty();
+public class TweetCensorship {
     private static final int maxCensorshipManipulations = 2;
-
-    public static RemoteData<List<Tweet>> getTweetsFor(String citizenName) {
-        if (cachedTweets.get(citizenName).isEmpty()) cachedTweets = cachedTweets.put(citizenName, new Loading<>());
-        getTweetsAsync(citizenName)
-                .map(Tweets::censorTweetsUsingFilters)
-                .onComplete(triedTweets -> {
-                    RemoteData<List<Tweet>> remoteTweets = Match(triedTweets).of(
-                            Case(Success($()), Fetched::new),
-                            Case(Failure($()), ex -> new Failed<>(ex.toString()))
-                    );
-
-                    cachedTweets = cachedTweets.put(citizenName, remoteTweets);
-                });
-        return cachedTweets.get(citizenName).getOrElse(new NotRequestedYet<>());
-    }
 
     // PROBLEM #5: Convoluted logic using IFs and vars
     public static List<Tweet> censorTweets(List<Tweet> tweets) {
@@ -74,7 +49,7 @@ public class Tweets {
                 tweet = sacrificeForEmpire(tweet);
                 manipulations += 1;
             }
-            return t;
+            return tweet;
         });
     }
 
@@ -125,10 +100,5 @@ public class Tweets {
                     return status;
             });
         }).map(status -> status.tweet);
-    }
-
-    private static Future<List<Tweet>> getTweetsAsync(String citizenName) {
-        Future<? extends Citizen> futureCitizen = DbClient.findCitizenByName(citizenName);
-        return futureCitizen.flatMap(DbClient::getTweetsFor);
     }
 }

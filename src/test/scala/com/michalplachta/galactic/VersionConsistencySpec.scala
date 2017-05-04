@@ -1,12 +1,13 @@
 package com.michalplachta.galactic
 
-import com.michalplachta.galactic.db.{FakeData => ScalaFakeData}
-import com.michalplachta.galactic.java.db.{FakeData => JavaFakeData}
-import com.michalplachta.galactic.java.service.{Tweets => JavaTweets}
-import com.michalplachta.galactic.service.{Tweets => ScalaTweets}
-import com.michalplachta.galactic.java.values.{Civil, Jedi, Rebel, Sith, Stormtrooper, Citizen => JavaCitizen, Tweet => JavaTweet}
-import com.michalplachta.galactic.values.{Citizen => ScalaCitizen, Tweet => ScalaTweet}
-import org.scalatest.{Matchers, WordSpec}
+import com.michalplachta.galactic.db.{ FakeData ⇒ ScalaFakeData }
+import com.michalplachta.galactic.java.db.{ FakeData ⇒ JavaFakeData }
+import com.michalplachta.galactic.java.logic.{ TweetCensorship ⇒ JavaCensorship }
+import com.michalplachta.galactic.java.values.{ Civil, Jedi, Rebel, Sith, Stormtrooper, Citizen ⇒ JavaCitizen, Tweet ⇒ JavaTweet }
+import com.michalplachta.galactic.logic.{ TweetCensorship ⇒ ScalaCensorship }
+import com.michalplachta.galactic.values.{ Citizen ⇒ ScalaCitizen }
+
+import org.scalatest.{ Matchers, WordSpec }
 
 import scala.collection.JavaConverters._
 
@@ -28,8 +29,16 @@ class VersionConsistencySpec extends WordSpec with Matchers {
     }
 
     "have the same censored Tweet lists" in {
-      val javaCensoredTweets: Seq[JavaTweet] = JavaTweets.censorTweetsUsingFilters(JavaFakeData.tweets).toJavaList().asScala
-      val scalaCensoredTweets: Seq[JavaTweet] = ScalaTweets.censorTweetsUsingFilters(ScalaFakeData.tweets).map {
+      val javaCensoredTweets: Seq[JavaTweet] = JavaCensorship.censorTweetsUsingFilters(JavaFakeData.tweets).toJavaList().asScala
+      val scalaCensoredTweets: Seq[JavaTweet] = ScalaCensorship.censorTweetsUsingFilters(ScalaFakeData.tweets).map {
+        t ⇒ new JavaTweet(t.text, scalaCitizenToJavaCitizen(t.author))
+      }
+      javaCensoredTweets should equal(scalaCensoredTweets)
+    }
+
+    "have the same censored Tweet lists (when censored imperatively)" in {
+      val javaCensoredTweets: Seq[JavaTweet] = JavaCensorship.censorTweets(JavaFakeData.tweets).toJavaList().asScala
+      val scalaCensoredTweets: Seq[JavaTweet] = ScalaCensorship.censorTweets(ScalaFakeData.tweets).map {
         t ⇒ new JavaTweet(t.text, scalaCitizenToJavaCitizen(t.author))
       }
       javaCensoredTweets should equal(scalaCensoredTweets)

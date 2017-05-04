@@ -1,9 +1,9 @@
-package com.michalplachta.galactic.service
+package com.michalplachta.galactic.logic
 
 import com.michalplachta.galactic.values.Citizen.{ Jedi, Rebel, Sith, Stormtrooper }
 import com.michalplachta.galactic.values.Tweet
 
-object Censorship {
+object CensorshipFunctions {
   def isProLightSide(tweet: Tweet): Boolean = tweet.text.split("the Force").length > tweet.text.split("Dark Side").length
 
   def isProDarkSide(tweet: Tweet): Boolean = tweet.text.split("the Force").length < tweet.text.split("Dark Side").length

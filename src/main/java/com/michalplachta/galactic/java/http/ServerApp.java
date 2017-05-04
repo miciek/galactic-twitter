@@ -8,7 +8,7 @@ import akka.http.javadsl.model.StatusCodes;
 import akka.http.javadsl.server.Route;
 import akka.stream.ActorMaterializer;
 import com.michalplachta.galactic.java.service.Followers;
-import com.michalplachta.galactic.java.service.Tweets;
+import com.michalplachta.galactic.java.service.TweetsService;
 import com.michalplachta.galactic.java.service.remotedata.RemoteData;
 import com.michalplachta.galactic.java.values.Tweet;
 import javaslang.Value;
@@ -27,7 +27,7 @@ public class ServerApp {
         };
 
         Function<String, Route> getTweets = citizenName -> {
-            RemoteData<List<Tweet>> followers = Tweets.getTweetsFor(citizenName).map(Value::toJavaList);
+            RemoteData<List<Tweet>> followers = TweetsService.getTweetsFor(citizenName).map(Value::toJavaList);
             return complete(StatusCodes.OK, followers, Jackson.marshaller());
         };
 
