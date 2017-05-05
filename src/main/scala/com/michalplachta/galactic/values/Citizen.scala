@@ -11,5 +11,5 @@ object Citizen {
 
   case class Rebel(name: String) extends Citizen
 
-  case class Civil(name: String) extends Citizen
+  case class Civilian(name: String) extends Citizen
 }

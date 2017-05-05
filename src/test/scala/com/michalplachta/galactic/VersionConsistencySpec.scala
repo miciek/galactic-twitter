@@ -3,7 +3,7 @@ package com.michalplachta.galactic
 import com.michalplachta.galactic.db.{ FakeData ⇒ ScalaFakeData }
 import com.michalplachta.galactic.java.db.{ FakeData ⇒ JavaFakeData }
 import com.michalplachta.galactic.java.logic.{ TweetCensorship ⇒ JavaCensorship }
-import com.michalplachta.galactic.java.values.{ Civil, Jedi, Rebel, Sith, Stormtrooper, Citizen ⇒ JavaCitizen, Tweet ⇒ JavaTweet }
+import com.michalplachta.galactic.java.values.{ Civilian, Jedi, Rebel, Sith, Stormtrooper, Citizen ⇒ JavaCitizen, Tweet ⇒ JavaTweet }
 import com.michalplachta.galactic.logic.{ TweetCensorship ⇒ ScalaCensorship }
 import com.michalplachta.galactic.values.{ Citizen ⇒ ScalaCitizen }
 
@@ -47,7 +47,7 @@ class VersionConsistencySpec extends WordSpec with Matchers {
 
   private def scalaCitizenToJavaCitizen(citizen: ScalaCitizen): JavaCitizen = {
     citizen match {
-      case ScalaCitizen.Civil(name)                  ⇒ new Civil(name)
+      case ScalaCitizen.Civilian(name)               ⇒ new Civilian(name)
       case ScalaCitizen.Jedi(name)                   ⇒ new Jedi(name)
       case ScalaCitizen.Rebel(name)                  ⇒ new Rebel(name)
       case ScalaCitizen.Sith(name)                   ⇒ new Sith(name)
