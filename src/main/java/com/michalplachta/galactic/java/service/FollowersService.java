@@ -44,7 +44,7 @@ public class FollowersService {
         private static Map<String, Try<Integer>> cachedTriedFollowers = HashMap.empty();
 
         // SOLUTION #2: explicit return type
-        // PROBLEM #4: cryptic return type
+        // PROBLEM #3: cryptic return type
         public static Option<Try<Integer>> getCachedTriedFollowers(String citizenName) {
             getFollowersAsync(citizenName).onComplete(result -> {
                 cachedTriedFollowers = cachedTriedFollowers.put(citizenName, result);
@@ -74,7 +74,7 @@ public class FollowersService {
 
         private static Map<String, RemoteFollowersData> cachedRemoteFollowers = HashMap.empty();
 
-        // SOLUTION #4: use Algebraic Data Types to describe states
+        // SOLUTION #3: use Algebraic Data Types to describe states
         public static RemoteFollowersData getRemoteFollowers(String citizenName) {
             if (cachedRemoteFollowers.get(citizenName).isEmpty())
                 cachedRemoteFollowers = cachedRemoteFollowers.put(citizenName, new Loading());

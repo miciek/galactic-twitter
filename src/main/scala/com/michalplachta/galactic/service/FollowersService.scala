@@ -42,7 +42,7 @@ object FollowersService {
     private var cachedTriedFollowers: Map[String, Try[Int]] = Map.empty
 
     // SOLUTION #2: explicit return type
-    // PROBLEM #4: cryptic return type
+    // PROBLEM #3: cryptic return type
     def getCachedTriedFollowers(citizenName: String): Option[Try[Int]] = {
       getFollowersAsync(citizenName).onComplete { result ⇒
         cachedTriedFollowers += (citizenName → result)
@@ -60,7 +60,7 @@ object FollowersService {
 
     private var cachedRemoteFollowers: Map[String, RemoteFollowersData] = Map.empty
 
-    // SOLUTION #4: use Algebraic Data Types to describe states
+    // SOLUTION #3: use Algebraic Data Types to describe states
     def getRemoteFollowers(citizenName: String): RemoteFollowersData = {
       if (cachedRemoteFollowers.get(citizenName).isEmpty) cachedRemoteFollowers += (citizenName → Loading())
       getFollowersAsync(citizenName).onComplete { result ⇒

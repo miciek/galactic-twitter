@@ -30,11 +30,11 @@ See comments in both [FollowersService.java](src/main/java/com/michalplachta/gal
 ### Problem #2: Not handling failures 
 See comments in both [FollowersService.java](src/main/java/com/michalplachta/galactic/java/service/FollowersService.java) and [FollowersServiceService.scala](src/main/scala/com/michalplachta/galactic/service/FollowersService.scala) files.
 
-### Problem #3: Handling lists of Algebraic Data Types
-See comments in both [Followers.java](src/main/java/com/michalplachta/galactic/java/logic/Followers.java) and [Followers.scala](src/main/scala/com/michalplachta/galactic/logic/Followers.scala) files.
-
-### Problem #4: Cryptic return types
+### Problem #3: Cryptic return types
 See comments in both [FollowersService.java](src/main/java/com/michalplachta/galactic/java/service/FollowersService.java) and [FollowersServiceService.scala](src/main/scala/com/michalplachta/galactic/service/FollowersService.scala) files.
+
+### Problem #4: Handling lists of Algebraic Data Types
+See comments in both [Followers.java](src/main/java/com/michalplachta/galactic/java/logic/Followers.java) and [Followers.scala](src/main/scala/com/michalplachta/galactic/logic/Followers.scala) files.
 
 ### Problem #5: Convoluted logic using IFs and vars
 See comments in both [TweetCensorship.java](src/main/java/com/michalplachta/galactic/java/logic/TweetCensorship.java) and [TweetCensorship.scala](src/main/scala/com/michalplachta/galactic/logic/TweetCensorship.scala) files.
