@@ -1,7 +1,7 @@
 package com.michalplachta.galactic.http
 
-import com.michalplachta.galactic.service.RemoteData
-import com.michalplachta.galactic.service.RemoteData._
+import com.michalplachta.galactic.values.RemoteData._
+import com.michalplachta.galactic.values.RemoteData
 import spray.json.{ DefaultJsonProtocol, JsObject, JsValue, RootJsonFormat, _ }
 
 trait RemoteDataJsonSupport extends DefaultJsonProtocol {

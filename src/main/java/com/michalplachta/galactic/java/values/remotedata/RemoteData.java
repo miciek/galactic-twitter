@@ -1,4 +1,4 @@
-package com.michalplachta.galactic.java.service.remotedata;
+package com.michalplachta.galactic.java.values.remotedata;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

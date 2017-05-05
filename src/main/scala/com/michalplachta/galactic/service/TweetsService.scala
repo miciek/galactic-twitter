@@ -2,8 +2,8 @@ package com.michalplachta.galactic.service
 
 import com.michalplachta.galactic.db.DbClient
 import com.michalplachta.galactic.logic.TweetCensorship.censorTweetsUsingFilters
-import com.michalplachta.galactic.service.RemoteData.{ Failed, Fetched, Loading, NotRequestedYet }
-import com.michalplachta.galactic.values.Tweet
+import com.michalplachta.galactic.values.RemoteData.{ Failed, Fetched, Loading, NotRequestedYet }
+import com.michalplachta.galactic.values.{ RemoteData, Tweet }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

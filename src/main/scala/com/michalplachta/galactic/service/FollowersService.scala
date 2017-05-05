@@ -3,8 +3,8 @@ package com.michalplachta.galactic.service
 import com.michalplachta.galactic.db.DbClient
 import com.michalplachta.galactic.logic.Followers
 import com.michalplachta.galactic.logic.Followers.sumFollowers
-import com.michalplachta.galactic.service.RemoteData.Loading
-import com.michalplachta.galactic.values.Citizen
+import com.michalplachta.galactic.values.RemoteData.Loading
+import com.michalplachta.galactic.values.{ Citizen, RemoteData }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

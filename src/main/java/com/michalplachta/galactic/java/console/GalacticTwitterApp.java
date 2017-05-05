@@ -2,7 +2,7 @@ package com.michalplachta.galactic.java.console;
 
 import com.michalplachta.galactic.java.service.FollowersService;
 import com.michalplachta.galactic.java.service.TweetsService;
-import com.michalplachta.galactic.java.service.remotedata.RemoteData;
+import com.michalplachta.galactic.java.values.remotedata.RemoteData;
 import com.michalplachta.galactic.java.values.Tweet;
 import javaslang.collection.List;
 

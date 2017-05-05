@@ -1,8 +1,8 @@
 package com.michalplachta.galactic.console
 
-import com.michalplachta.galactic.service.RemoteData._
-import com.michalplachta.galactic.service.{ FollowersService, RemoteData, TweetsService }
-import com.michalplachta.galactic.values.Tweet
+import com.michalplachta.galactic.values.RemoteData._
+import com.michalplachta.galactic.service.{ FollowersService, TweetsService }
+import com.michalplachta.galactic.values.{ RemoteData, Tweet }
 
 import scala.annotation.tailrec
 

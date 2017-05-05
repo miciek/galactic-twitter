@@ -1,6 +1,6 @@
 package com.michalplachta.galactic.java.internal;
 
-import com.michalplachta.galactic.java.service.remotedata.*;
+import com.michalplachta.galactic.java.values.remotedata.*;
 import javaslang.API;
 import javaslang.Tuple;
 import javaslang.Tuple1;

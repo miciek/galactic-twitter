@@ -1,4 +1,4 @@
-package com.michalplachta.galactic.service
+package com.michalplachta.galactic.values
 
 sealed trait RemoteData[A]
 

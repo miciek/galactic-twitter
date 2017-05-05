@@ -9,7 +9,7 @@ import akka.http.javadsl.server.Route;
 import akka.stream.ActorMaterializer;
 import com.michalplachta.galactic.java.service.FollowersService;
 import com.michalplachta.galactic.java.service.TweetsService;
-import com.michalplachta.galactic.java.service.remotedata.RemoteData;
+import com.michalplachta.galactic.java.values.remotedata.RemoteData;
 import com.michalplachta.galactic.java.values.Tweet;
 import javaslang.Value;
 

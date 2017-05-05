@@ -2,7 +2,7 @@ package com.michalplachta.galactic.java.service;
 
 import com.michalplachta.galactic.java.db.DbClient;
 import com.michalplachta.galactic.java.logic.Followers;
-import com.michalplachta.galactic.java.service.remotedata.*;
+import com.michalplachta.galactic.java.values.remotedata.*;
 import com.michalplachta.galactic.java.values.Citizen;
 import javaslang.collection.HashMap;
 import javaslang.collection.Map;
