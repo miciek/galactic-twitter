@@ -14,14 +14,14 @@ import static javaslang.Patterns.Success;
 import static com.michalplachta.galactic.java.internal.RemoteFollowersDataPatterns.*;
 
 public class GalacticFollowersApp {
-    private static void runFollowersApp(Function<String, String> getFollowersDescription) {
+    private static void runFollowersApp(Function<String, String> getFollowersText) {
         System.out.println("Enter Citizen's name: ");
         Scanner scanner = new Scanner(System.in);
         String name = scanner.nextLine();
         System.out.println(String.format("Getting followers for %s", name));
-        String followersDescription = getFollowersDescription.apply(name);
-        System.out.println(String.format("%s has %s followers!", name, followersDescription));
-        runFollowersApp(getFollowersDescription);
+        String followersText = getFollowersText.apply(name);
+        System.out.println(String.format("%s has %s followers!", name, followersText));
+        runFollowersApp(getFollowersText);
     }
 
     private static String getAndDescribe(String name) {
