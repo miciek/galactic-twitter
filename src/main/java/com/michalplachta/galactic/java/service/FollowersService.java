@@ -106,7 +106,7 @@ public class FollowersService {
     }
 
     private static Future<Integer> getFollowersAsync(String name) {
-        Future<? extends Citizen> futureCitizen = DbClient.findCitizenByName(name);
+        Future<? extends Citizen> futureCitizen = DbClient.getCitizenByName(name);
         return futureCitizen.flatMap(DbClient::getFollowers).map(Followers::sumFollowers);
     }
 }

@@ -33,7 +33,7 @@ public class TweetsService {
     }
 
     private static Future<List<Tweet>> getTweetsAsync(String citizenName) {
-        Future<? extends Citizen> futureCitizen = DbClient.findCitizenByName(citizenName);
+        Future<? extends Citizen> futureCitizen = DbClient.getCitizenByName(citizenName);
         return futureCitizen.flatMap(DbClient::getTweetsFor);
     }
 }

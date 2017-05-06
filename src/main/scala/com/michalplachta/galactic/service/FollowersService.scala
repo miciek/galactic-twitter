@@ -92,7 +92,7 @@ object FollowersService {
   }
 
   private def getFollowersAsync(name: String): Future[Int] = {
-    val futureCitizen: Future[Citizen] = DbClient.findCitizenByName(name)
+    val futureCitizen: Future[Citizen] = DbClient.getCitizenByName(name)
     futureCitizen.flatMap {
       citizen ⇒ DbClient.getFollowers(citizen).mapTo[List[Citizen]].map(sumFollowers)
     }

@@ -30,7 +30,7 @@ object TweetsService {
 
   private def getTweetsAsync(citizenName: String): Future[List[Tweet]] = {
     for {
-      citizen ← DbClient.findCitizenByName(citizenName)
+      citizen ← DbClient.getCitizenByName(citizenName)
       tweets ← DbClient.getTweetsFor(citizen)
     } yield tweets
   }

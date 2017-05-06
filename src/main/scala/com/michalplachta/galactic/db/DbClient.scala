@@ -11,7 +11,7 @@ import scala.concurrent.Future
 object DbClient {
   import com.michalplachta.galactic.db.FakeData._
 
-  def findCitizenByName(citizenName: String): Future[Citizen] = {
+  def getCitizenByName(citizenName: String): Future[Citizen] = {
     citizens.find(_.name == citizenName) match {
       case Some(citizen) ⇒ simulateResponse(citizen)
       case None          ⇒ simulateBadRequest(s"citizen with name $citizenName couldn't be found")

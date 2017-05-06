@@ -13,7 +13,7 @@ import static javaslang.API.*;
  * A simulation of a client for a very slow database. Some calls may also fail with an exception ;)
  */
 public class DbClient {
-    public static Future<? extends Citizen> findCitizenByName(String citizenName) {
+    public static Future<? extends Citizen> getCitizenByName(String citizenName) {
         return citizens.find(citizen -> citizen.name.equals(citizenName))
                 .map(DbClient::simulateResponse)
                 .getOrElse(simulateBadRequest(String.format("citizen with name %s couldn't be found", citizenName)));
