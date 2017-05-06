@@ -2,8 +2,8 @@ package com.michalplachta.galactic.java.service;
 
 import com.michalplachta.galactic.java.db.DbClient;
 import com.michalplachta.galactic.java.logic.Followers;
-import com.michalplachta.galactic.java.values.remotedata.*;
 import com.michalplachta.galactic.java.values.Citizen;
+import com.michalplachta.galactic.java.values.remotedata.*;
 import javaslang.collection.HashMap;
 import javaslang.collection.Map;
 import javaslang.concurrent.Future;
@@ -18,7 +18,6 @@ public class FollowersService {
     public static class Version1 {
         private static Map<String, Integer> cachedFollowers = HashMap.empty();
 
-        // PROBLEM #1: treating 0 as "no value yet"
         public static Integer getFollowers(String citizenName) {
             getFollowersAsync(citizenName).forEach(result -> {
                 cachedFollowers = cachedFollowers.put(citizenName, result);
@@ -105,8 +104,10 @@ public class FollowersService {
         return cache.get(citizenName).getOrElse(new NotRequestedYet<Integer>());
     }
 
-    private static Future<Integer> getFollowersAsync(String name) {
-        Future<? extends Citizen> futureCitizen = DbClient.getCitizenByName(name);
-        return futureCitizen.flatMap(DbClient::getFollowers).map(Followers::sumFollowers);
+    private static Future<Integer> getFollowersAsync(String citizenName) {
+        Future<? extends Citizen> futureCitizen = DbClient.getCitizenByName(citizenName);
+        return futureCitizen
+                .flatMap(DbClient::getFollowers)
+                .map(Followers::sumFollowers);
     }
 }

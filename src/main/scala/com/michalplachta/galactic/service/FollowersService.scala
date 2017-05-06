@@ -91,8 +91,8 @@ object FollowersService {
     cache.getOrElse(citizenName, RemoteData.NotRequestedYet())
   }
 
-  private def getFollowersAsync(name: String): Future[Int] = {
-    val futureCitizen: Future[Citizen] = DbClient.getCitizenByName(name)
+  private def getFollowersAsync(citizenName: String): Future[Int] = {
+    val futureCitizen: Future[Citizen] = DbClient.getCitizenByName(citizenName)
     futureCitizen.flatMap {
       citizen ⇒ DbClient.getFollowers(citizen).mapTo[List[Citizen]].map(sumFollowers)
     }
