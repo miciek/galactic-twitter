@@ -15,7 +15,7 @@ import static javaslang.Patterns.Success;
 
 public class GalacticFollowersApp {
     private static void runFollowersApp(Function<String, String> getFollowersText) {
-        System.out.println("Enter Citizen's name: ");
+        System.out.println("---\nEnter Citizen's name: ");
         Scanner scanner = new Scanner(System.in);
         String citizenName = scanner.nextLine();
         System.out.println(String.format("Getting followers for %s", citizenName));

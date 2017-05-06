@@ -9,7 +9,7 @@ import scala.annotation.tailrec
 object GalacticTwitterApp extends App {
   @tailrec
   def runConsoleTwitter(): Unit = {
-    println("Enter Citizen's name: ")
+    println("---\nEnter Citizen's name: ")
     val name = io.StdIn.readLine()
     println(s"Getting followers for $name")
     val followersText = getFollowersText(name)

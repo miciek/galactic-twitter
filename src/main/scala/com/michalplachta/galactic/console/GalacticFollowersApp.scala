@@ -9,7 +9,7 @@ import scala.util.{ Failure, Success }
 object GalacticFollowersApp extends App {
   @tailrec
   def runFollowersApp(getFollowersText: String ⇒ String): Unit = {
-    println("Enter Citizen's name: ")
+    println("---\nEnter Citizen's name: ")
     val citizenName = io.StdIn.readLine()
     println(s"Getting followers for $citizenName")
     val followersDescription = getFollowersText(citizenName)

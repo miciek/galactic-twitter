@@ -13,7 +13,7 @@ import static javaslang.API.*;
 
 public class GalacticTwitterApp {
     private static void runConsoleTwitter() {
-        System.out.println("Enter Citizen's name: ");
+        System.out.println("---\nEnter Citizen's name: ");
         Scanner scanner = new Scanner(System.in);
         String name = scanner.nextLine();
         System.out.println(String.format("Getting followers for %s", name));
