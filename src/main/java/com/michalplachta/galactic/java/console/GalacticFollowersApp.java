@@ -51,7 +51,7 @@ public class GalacticFollowersApp {
         );
     }
 
-    public static void main(String[] args) {
-        runFollowersApp(GalacticFollowersApp::getAndDescribeUsingADTs);
+    public static void main(String[] args){
+        runFollowersApp(GalacticFollowersApp::getAndDescribe);
     }
 }
