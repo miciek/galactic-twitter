@@ -18,6 +18,7 @@ public class FollowersService {
     public static class Version1 {
         private static Map<String, Integer> cachedFollowers = HashMap.empty();
 
+        // PROBLEM #1: treating 0 as "no value yet"
         public static Integer getFollowers(String citizenName) {
             getFollowersAsync(citizenName).forEach(result -> {
                 cachedFollowers = cachedFollowers.put(citizenName, result);

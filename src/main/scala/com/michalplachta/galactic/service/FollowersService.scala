@@ -93,8 +93,8 @@ object FollowersService {
 
   private def getFollowersAsync(citizenName: String): Future[Int] = {
     for {
-      citizen <- DbClient.getCitizenByName(citizenName)
-      followers <- DbClient.getFollowers(citizen).mapTo[List[Citizen]]
+      citizen ← DbClient.getCitizenByName(citizenName)
+      followers ← DbClient.getFollowers(citizen).mapTo[List[Citizen]]
     } yield sumFollowers(followers)
   }
 }
