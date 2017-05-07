@@ -16,8 +16,8 @@ object FollowersService {
 
     // PROBLEM #1: treating 0 as "no value yet"
     def getFollowers(citizenName: String): Int = {
-      getFollowersAsync(citizenName).foreach { result ⇒
-        cachedFollowers += (citizenName → result)
+      getFollowersAsync(citizenName).foreach { followers ⇒
+        cachedFollowers += (citizenName → followers)
       }
 
       val cachedResult: Option[Int] = cachedFollowers.get(citizenName)
@@ -31,8 +31,8 @@ object FollowersService {
     // SOLUTION #1: explicit return type
     // PROBLEM #2: not handling failures
     def getCachedFollowers(citizenName: String): Option[Int] = {
-      getFollowersAsync(citizenName).foreach { result ⇒
-        cachedFollowers += (citizenName → result)
+      getFollowersAsync(citizenName).foreach { followers ⇒
+        cachedFollowers += (citizenName → followers)
       }
       cachedFollowers.get(citizenName)
     }
@@ -44,8 +44,8 @@ object FollowersService {
     // SOLUTION #2: explicit return type
     // PROBLEM #3: cryptic return type
     def getCachedTriedFollowers(citizenName: String): Option[Try[Int]] = {
-      getFollowersAsync(citizenName).onComplete { result ⇒
-        cachedTriedFollowers += (citizenName → result)
+      getFollowersAsync(citizenName).onComplete { triedFollowers ⇒
+        cachedTriedFollowers += (citizenName → triedFollowers)
       }
       cachedTriedFollowers.get(citizenName)
     }
@@ -63,9 +63,9 @@ object FollowersService {
     // SOLUTION #3: use Algebraic Data Types to describe states
     def getRemoteFollowers(citizenName: String): RemoteFollowersData = {
       if (cachedRemoteFollowers.get(citizenName).isEmpty) cachedRemoteFollowers += (citizenName → Loading())
-      getFollowersAsync(citizenName).onComplete { result ⇒
+      getFollowersAsync(citizenName).onComplete { triedFollowers ⇒
         val value: RemoteFollowersData =
-          result match {
+          triedFollowers match {
             case Success(followers) ⇒ Fetched(followers)
             case Failure(t)         ⇒ Failed(t.toString)
           }
@@ -80,9 +80,9 @@ object FollowersService {
 
   def getFollowers(citizenName: String): RemoteData[Int] = {
     if (cache.get(citizenName).isEmpty) cache += (citizenName → Loading())
-    getFollowersAsync(citizenName).onComplete { result ⇒
+    getFollowersAsync(citizenName).onComplete { triedFollowers ⇒
       val value: RemoteData[Int] =
-        result match {
+        triedFollowers match {
           case Success(followers) ⇒ RemoteData.Fetched(followers)
           case Failure(t)         ⇒ RemoteData.Failed(t.toString)
         }

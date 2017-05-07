@@ -20,8 +20,8 @@ public class FollowersService {
 
         // PROBLEM #1: treating 0 as "no value yet"
         public static Integer getFollowers(String citizenName) {
-            getFollowersAsync(citizenName).forEach(result -> {
-                cachedFollowers = cachedFollowers.put(citizenName, result);
+            getFollowersAsync(citizenName).forEach(followers -> {
+                cachedFollowers = cachedFollowers.put(citizenName, followers);
             });
             return cachedFollowers.get(citizenName).getOrElse(0);
         }
@@ -33,8 +33,8 @@ public class FollowersService {
         // SOLUTION #1: explicit return type
         // PROBLEM #2: not handling failures
         public static Option<Integer> getCachedFollowers(String citizenName) {
-            getFollowersAsync(citizenName).forEach(result -> {
-                cachedFollowers = cachedFollowers.put(citizenName, result);
+            getFollowersAsync(citizenName).forEach(followers -> {
+                cachedFollowers = cachedFollowers.put(citizenName, followers);
             });
             return cachedFollowers.get(citizenName);
         }
@@ -46,8 +46,8 @@ public class FollowersService {
         // SOLUTION #2: explicit return type
         // PROBLEM #3: cryptic return type
         public static Option<Try<Integer>> getCachedTriedFollowers(String citizenName) {
-            getFollowersAsync(citizenName).onComplete(result -> {
-                cachedTriedFollowers = cachedTriedFollowers.put(citizenName, result);
+            getFollowersAsync(citizenName).onComplete(triedFollowers -> {
+                cachedTriedFollowers = cachedTriedFollowers.put(citizenName, triedFollowers);
             });
             return cachedTriedFollowers.get(citizenName);
         }
@@ -78,8 +78,8 @@ public class FollowersService {
         public static RemoteFollowersData getRemoteFollowers(String citizenName) {
             if (cachedRemoteFollowers.get(citizenName).isEmpty())
                 cachedRemoteFollowers = cachedRemoteFollowers.put(citizenName, new Loading());
-            getFollowersAsync(citizenName).onComplete(result -> {
-                RemoteFollowersData value = Match(result).of(
+            getFollowersAsync(citizenName).onComplete(triedFollowers -> {
+                RemoteFollowersData value = Match(triedFollowers).of(
                         Case(Success($()), Fetched::new),
                         Case(Failure($()), ex -> new Failed(ex.toString()))
                 );
@@ -95,8 +95,8 @@ public class FollowersService {
     public static RemoteData<Integer> getFollowers(String citizenName) {
         if (cache.get(citizenName).isEmpty())
             cache = cache.put(citizenName, new Loading<Integer>());
-        getFollowersAsync(citizenName).onComplete(result -> {
-            RemoteData<Integer> value = Match(result).of(
+        getFollowersAsync(citizenName).onComplete(triedFollowers -> {
+            RemoteData<Integer> value = Match(triedFollowers).of(
                     Case(Success($()), Fetched<Integer>::new),
                     Case(Failure($()), ex -> new Failed<Integer>(ex.toString()))
             );
