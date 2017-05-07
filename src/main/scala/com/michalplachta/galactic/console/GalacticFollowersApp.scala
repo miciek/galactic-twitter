@@ -23,7 +23,7 @@ object GalacticFollowersApp extends App {
 
   def getAndDescribeUsingCache(citizenName: String): String = {
     val cachedFollowers = FollowersService.Version2.getCachedFollowers(citizenName)
-    cachedFollowers.map(_.toString).getOrElse("(not available)")
+    cachedFollowers.map(_.toString).getOrElse("(loading...)")
   }
 
   def getAndDescribeUsingCacheWithFailures(citizenName: String): String = {
@@ -31,7 +31,7 @@ object GalacticFollowersApp extends App {
     cachedTriedFollowers map {
       case Success(followers)    ⇒ followers.toString
       case Failure(errorMessage) ⇒ s"(failed to get followers: $errorMessage)"
-    } getOrElse "(not available)"
+    } getOrElse "(loading...)"
   }
 
   def getAndDescribeUsingADTs(citizenName: String): String = {

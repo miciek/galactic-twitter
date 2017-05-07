@@ -30,7 +30,7 @@ public class GalacticFollowersApp {
 
     private static String getAndDescribeUsingCache(String citizenName) {
         Option<Integer> cachedFollowers = FollowersService.Version2.getCachedFollowers(citizenName);
-        return cachedFollowers.map(Object::toString).getOrElse("(not available)");
+        return cachedFollowers.map(Object::toString).getOrElse("(loading...)");
     }
 
     private static String getAndDescribeUsingCacheWithFailures(String citizenName) {
@@ -38,7 +38,7 @@ public class GalacticFollowersApp {
         return cachedTriedFollowers.map(triedFollowers -> Match(triedFollowers).of(
             Case(Success($()), Object::toString),
             Case(Failure($()), errorMessage -> String.format("(failed to get followers: %s)", errorMessage))
-        )).getOrElse("(not available)");
+        )).getOrElse("(loading...)");
     }
 
     private static String getAndDescribeUsingADTs(String citizenName) {
