@@ -13,9 +13,9 @@ public class TweetCensorship {
     private static final int maxCensorshipManipulations = 2;
 
     // PROBLEM #5: Convoluted logic using IFs and vars
-    public static List<Tweet> censorTweets(List<Tweet> tweets) {
-        return tweets.map(t -> {
-            Tweet tweet = t;
+    public static List<Tweet> censorTweet(List<Tweet> tweets) {
+        return tweets.map(originalTweet -> {
+            Tweet tweet = originalTweet;
             int manipulations = 0;
             if (isProDarkSide(tweet)) {
                 tweet = addMoreDarkSide(tweet);

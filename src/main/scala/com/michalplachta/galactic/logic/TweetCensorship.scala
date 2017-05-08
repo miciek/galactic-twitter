@@ -9,8 +9,8 @@ object TweetCensorship {
 
   // PROBLEM #5: Convoluted logic using IFs and vars
   def censorTweets(tweets: List[Tweet]): List[Tweet] = {
-    tweets.map { t ⇒
-      var tweet = t
+    tweets.map { originalTweet ⇒
+      var tweet = originalTweet
       var manipulations = 0
       if (isProDarkSide(tweet)) {
         tweet = addMoreDarkSide(tweet)

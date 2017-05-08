@@ -37,7 +37,7 @@ class VersionConsistencySpec extends WordSpec with Matchers {
     }
 
     "have the same censored Tweet lists (when censored imperatively)" in {
-      val javaCensoredTweets: Seq[JavaTweet] = JavaCensorship.censorTweets(JavaFakeData.tweets).toJavaList().asScala
+      val javaCensoredTweets: Seq[JavaTweet] = JavaCensorship.censorTweet(JavaFakeData.tweets).toJavaList().asScala
       val scalaCensoredTweets: Seq[JavaTweet] = ScalaCensorship.censorTweets(ScalaFakeData.tweets).map {
         t ⇒ new JavaTweet(t.text, scalaCitizenToJavaCitizen(t.author))
       }
