@@ -1,6 +1,7 @@
 package com.michalplachta.galactic.java.logic;
 
 import com.michalplachta.galactic.java.values.Tweet;
+import javaslang.Function2;
 import javaslang.collection.List;
 
 import java.util.function.Function;
@@ -84,21 +85,25 @@ public class TweetCensorship {
             new CensorFilter(isGeneralWisdom, replaceForceWithDarkSide.andThen(addMoreDarkSide)),
             new CensorFilter(and(isProRebellion, not(isJoke)), hailEmpire),
             new CensorFilter(and(isProEmpire, isJoke), trashRebellion),
-            new CensorFilter(and(not(isProRebellion), not(isProEmpire)), addMoreForce.andThen(addEvenMoreForce).andThen(makeJoke)),
+            new CensorFilter(and(not(isProRebellion), not(isProEmpire)),
+                             addMoreForce.andThen(addEvenMoreForce).andThen(makeJoke)),
             new CensorFilter(isProEmpire, addMoreDarkSide),
             new CensorFilter(sacrificeForEmpire)
     );
 
-    // SOLUTION #5: Logic as data, accumulator as state, folding data to run the logic
     public static List<Tweet> censorTweetsUsingFilters(List<Tweet> tweets) {
         return tweets.map(originalTweet -> {
             CensorStatus initialStatus = new CensorStatus(originalTweet, 0);
-            return censorFilters.foldLeft(initialStatus, (status, filter) -> {
-                if(filter.shouldManipulate.apply(status.tweet) && status.manipulations < maxCensorshipManipulations)
-                    return new CensorStatus(filter.manipulate.apply(status.tweet), status.manipulations + 1);
-                else
-                    return status;
-            });
+            return censorFilters.foldLeft(initialStatus, applyFilter);
         }).map(status -> status.tweet);
     }
+
+    private final static Function2<CensorStatus, CensorFilter, CensorStatus> applyFilter =
+        (status, filter) -> {
+            if(filter.shouldManipulate.apply(status.tweet)
+                    && status.manipulations < maxCensorshipManipulations)
+                return new CensorStatus(filter.manipulate.apply(status.tweet),
+                        status.manipulations + 1);
+            else return status;
+        };
 }
