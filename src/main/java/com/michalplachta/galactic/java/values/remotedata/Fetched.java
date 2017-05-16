@@ -1,10 +1,7 @@
 package com.michalplachta.galactic.java.values.remotedata;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
-
 import java.util.function.Function;
 
-@JsonTypeName("Fetched")
 public class Fetched<A> implements RemoteData<A> {
     public final A data;
 

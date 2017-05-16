@@ -30,6 +30,8 @@ object FakeData {
     Tweet("May the Force be with you.", Rebel("Princess Leia")),
     Tweet("The Force is strong with this one.", Sith("Darth Vader")),
     Tweet("Use the Force, Luke.", Jedi("Obi-Wan Kenobi")),
+    Tweet("I'll drop my weapon.", Stormtrooper("JB-007", cloned = false)),
+    Tweet("Don't move!", Stormtrooper("Random Stormtrooper", cloned = false)),
     Tweet("Once more the Sith will rule the galaxy, and we shall have peace.", Sith("Emperor"))
   )
 }

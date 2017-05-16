@@ -30,5 +30,7 @@ public class FakeData {
             new Tweet("May the Force be with you.", new Rebel("Princess Leia")),
             new Tweet("The Force is strong with this one.", new Sith("Darth Vader")),
             new Tweet("Use the Force, Luke.", new Jedi("Obi-Wan Kenobi")),
+            new Tweet("I'll drop my weapon.", new Stormtrooper("JB-007", false)),
+            new Tweet("Don't move!", new Stormtrooper("Random Stormtrooper", false)),
             new Tweet("Once more the Sith will rule the galaxy, and we shall have peace.", new Sith("Emperor")));
 }
