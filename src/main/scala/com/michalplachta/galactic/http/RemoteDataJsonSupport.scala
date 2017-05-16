@@ -1,28 +1,17 @@
 package com.michalplachta.galactic.http
 
-import com.michalplachta.galactic.values.RemoteData._
 import com.michalplachta.galactic.values.RemoteData
-import spray.json.{ DefaultJsonProtocol, JsObject, JsValue, RootJsonFormat, _ }
+import com.michalplachta.galactic.values.RemoteData._
+import spray.json.{ JsObject, JsValue, _ }
 
-trait RemoteDataJsonSupport extends DefaultJsonProtocol {
-  implicit def notRequestedYetJson[A: JsonFormat] = jsonFormat0(NotRequestedYet.apply[A])
-  implicit def loadingJson[A: JsonFormat] = jsonFormat0(Loading.apply[A])
-  implicit def failedJson[A: JsonFormat] = jsonFormat1(Failed.apply[A])
-  implicit def fetchedJson[A: JsonFormat] = jsonFormat1(Fetched.apply[A])
-
-  implicit def remoteDataJson[A: JsonFormat] = new RootJsonFormat[RemoteData[A]] {
-    def write(obj: RemoteData[A]): JsValue = JsObject((obj match {
-      case d: NotRequestedYet[A] ⇒ d.toJson
-      case d: Loading[A]         ⇒ d.toJson
-      case d: Failed[A]          ⇒ d.toJson
-      case d: Fetched[A]         ⇒ d.toJson
-    }).asJsObject.fields + ("state" → JsString(obj.getClass.getSimpleName)))
-
-    def read(json: JsValue): RemoteData[A] = json.asJsObject.getFields("state") match {
-      case Seq(JsString("NotRequestedYet")) ⇒ json.convertTo[NotRequestedYet[A]]
-      case Seq(JsString("Loading"))         ⇒ json.convertTo[Loading[A]]
-      case Seq(JsString("Failed"))          ⇒ json.convertTo[Failed[A]]
-      case Seq(JsString("Fetched"))         ⇒ json.convertTo[Fetched[A]]
+// NOTE: this is done manually for demonstration purposes, see CitizenJsonSupport.scala to see how to use helper functions
+trait RemoteDataJsonSupport {
+  implicit def remoteDataJson[A: JsonFormat] = new RootJsonWriter[RemoteData[A]] {
+    def write(remoteData: RemoteData[A]): JsValue = remoteData match {
+      case _: NotRequestedYet[A] ⇒ JsObject("state" → JsString("NotRequestedYet"))
+      case _: Loading[A]         ⇒ JsObject("state" → JsString("Loading"))
+      case o: Failed[A]          ⇒ JsObject("state" → JsString("Failed"), "errorMessage" → JsString(o.errorMessage))
+      case o: Fetched[A]         ⇒ JsObject("state" → JsString("Fetched"), "data" → o.data.toJson)
     }
   }
 }
