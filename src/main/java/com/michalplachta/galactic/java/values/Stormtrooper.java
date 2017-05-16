@@ -1,8 +1,11 @@
 package com.michalplachta.galactic.java.values;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 public class Stormtrooper extends Citizen {
+    @JsonProperty("cloned")
     public final boolean isCloned;
 
     public Stormtrooper(String name, boolean isCloned) {

@@ -7,11 +7,11 @@ import java.util.Objects;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include= JsonTypeInfo.As.PROPERTY, property="type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value=Civilian.class, name="civilian"),
+        @JsonSubTypes.Type(value=Civilian.class, name="Civilian"),
         @JsonSubTypes.Type(value=Jedi.class, name="Jedi"),
-        @JsonSubTypes.Type(value=Rebel.class, name="rebel"),
+        @JsonSubTypes.Type(value=Rebel.class, name="Rebel"),
         @JsonSubTypes.Type(value=Sith.class, name="Sith"),
-        @JsonSubTypes.Type(value=Stormtrooper.class, name="stormtrooper"),
+        @JsonSubTypes.Type(value=Stormtrooper.class, name="Stormtrooper"),
 })
 public abstract class Citizen {
     public final String name;
