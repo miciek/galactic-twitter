@@ -15,15 +15,20 @@ libraryDependencies ++= {
   val configV = "1.3.1"
   val logbackV = "1.1.5"
   val scalatestV = "3.0.1"
+  val junitV = "4.12"
+  val junitInterfaceV = "0.11"
   Seq(
     "com.typesafe.akka" %% "akka-http" % akkaHttpV,
     "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpV,
     "com.typesafe.akka" %% "akka-http-jackson" % akkaHttpV,
     "io.vavr" % "vavr" % vavrV,
+    "io.vavr" % "vavr-test" % vavrV,
     "com.typesafe" % "config" % configV,
     "com.typesafe.akka" %% "akka-slf4j" % akkaV,
     "ch.qos.logback" % "logback-classic" % logbackV,
-    "org.scalatest" %% "scalatest" % scalatestV % Test
+    "org.scalatest" %% "scalatest" % scalatestV % Test,
+    "junit" % "junit" % junitV % Test,
+    "com.novocode" % "junit-interface" % junitInterfaceV % "test"
   )
 }
 
