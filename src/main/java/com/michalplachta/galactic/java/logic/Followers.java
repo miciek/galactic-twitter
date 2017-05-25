@@ -1,10 +1,10 @@
 package com.michalplachta.galactic.java.logic;
 
 import com.michalplachta.galactic.java.values.Citizen;
-import javaslang.collection.List;
+import io.vavr.collection.List;
 
 import static com.michalplachta.galactic.java.internal.CitizenPatterns.Stormtrooper;
-import static javaslang.API.*;
+import static io.vavr.API.*;
 
 public class Followers {
     // PROBLEM #4: clones are counted as followers

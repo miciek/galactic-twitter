@@ -11,7 +11,7 @@ resolvers += Resolver.jcenterRepo
 libraryDependencies ++= {
   val akkaV = "2.4.18"
   val akkaHttpV = "10.0.6"
-  val javaslangV = "2.0.6"
+  val vavrV = "0.9.0"
   val configV = "1.3.1"
   val logbackV = "1.1.5"
   val scalatestV = "3.0.1"
@@ -19,8 +19,7 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-http" % akkaHttpV,
     "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpV,
     "com.typesafe.akka" %% "akka-http-jackson" % akkaHttpV,
-    "io.javaslang" % "javaslang" % javaslangV,
-    "io.javaslang" % "javaslang-pure" % javaslangV,
+    "io.vavr" % "vavr" % vavrV,
     "com.typesafe" % "config" % configV,
     "com.typesafe.akka" %% "akka-slf4j" % akkaV,
     "ch.qos.logback" % "logback-classic" % logbackV,

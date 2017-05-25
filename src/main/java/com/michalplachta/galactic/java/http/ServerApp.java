@@ -11,7 +11,7 @@ import com.michalplachta.galactic.java.service.FollowersService;
 import com.michalplachta.galactic.java.service.TweetsService;
 import com.michalplachta.galactic.java.values.remotedata.RemoteData;
 import com.michalplachta.galactic.java.values.Tweet;
-import javaslang.Value;
+import io.vavr.Value;
 
 import java.util.List;
 import java.util.function.Function;

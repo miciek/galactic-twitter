@@ -1,7 +1,7 @@
 package com.michalplachta.galactic.java.db;
 
 import com.michalplachta.galactic.java.values.*;
-import javaslang.collection.List;
+import io.vavr.collection.List;
 
 public class FakeData {
     public final static List<Citizen> clones = List.range(1, 100).map(n -> new Stormtrooper("Clone Trooper #" + n, true));

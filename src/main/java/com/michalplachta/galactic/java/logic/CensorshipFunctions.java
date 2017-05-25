@@ -1,10 +1,10 @@
 package com.michalplachta.galactic.java.logic;
 
 import com.michalplachta.galactic.java.values.Tweet;
-import javaslang.Function1;
+import io.vavr.Function1;
 
 import static com.michalplachta.galactic.java.internal.CitizenPatterns.*;
-import static javaslang.API.*;
+import static io.vavr.API.*;
 
 class CensorshipFunctions {
     static boolean isProLightSide(Tweet tweet) {

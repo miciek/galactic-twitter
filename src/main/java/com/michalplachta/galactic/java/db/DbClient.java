@@ -2,12 +2,12 @@ package com.michalplachta.galactic.java.db;
 
 import com.michalplachta.galactic.java.values.Citizen;
 import com.michalplachta.galactic.java.values.Tweet;
-import javaslang.collection.List;
-import javaslang.concurrent.Future;
-import javaslang.concurrent.Promise;
+import io.vavr.collection.List;
+import io.vavr.concurrent.Future;
+import io.vavr.concurrent.Promise;
 
 import static com.michalplachta.galactic.java.db.FakeData.*;
-import static javaslang.API.*;
+import static io.vavr.API.*;
 
 /**
  * A simulation of a client for a very slow database. Some calls may also fail with an exception ;)

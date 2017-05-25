@@ -1,8 +1,8 @@
 package com.michalplachta.galactic.java.logic;
 
 import com.michalplachta.galactic.java.values.Tweet;
-import javaslang.Function2;
-import javaslang.collection.List;
+import io.vavr.Function2;
+import io.vavr.collection.List;
 
 import java.util.function.Function;
 

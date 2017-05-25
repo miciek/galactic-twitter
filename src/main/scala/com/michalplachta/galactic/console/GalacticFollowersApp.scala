@@ -4,13 +4,14 @@ import com.michalplachta.galactic.service.FollowersService
 import com.michalplachta.galactic.service.FollowersService.Version4._
 
 import scala.annotation.tailrec
+import scala.io.StdIn
 import scala.util.{ Failure, Success }
 
 object GalacticFollowersApp extends App {
   @tailrec
   def runFollowersApp(getFollowersText: String ⇒ String): Unit = {
     println("---\nEnter Citizen's name: ")
-    val citizenName = io.StdIn.readLine()
+    val citizenName = StdIn.readLine()
     println(s"Getting followers for $citizenName")
     val followersDescription = getFollowersText(citizenName)
     println(s"$citizenName has $followersDescription followers!")

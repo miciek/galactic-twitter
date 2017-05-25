@@ -1,6 +1,6 @@
 package com.michalplachta.galactic.java.internal;
 
-import javaslang.Function1;
+import io.vavr.Function1;
 
 public class PredicateLogic {
     public static <T> Function1<T, Boolean> and(Function1<T, Boolean> f1, Function1<T, Boolean> f2) {

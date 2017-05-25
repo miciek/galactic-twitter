@@ -2,7 +2,6 @@ package com.michalplachta.galactic.java.values.remotedata;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import javaslang.algebra.Functor;
 
 import java.util.function.Function;
 
@@ -13,7 +12,7 @@ import java.util.function.Function;
         @JsonSubTypes.Type(value=Failed.class, name="Failed"),
         @JsonSubTypes.Type(value=Fetched.class, name="Fetched")
 })
-public interface RemoteData<A> extends Functor<A> {
+public interface RemoteData<A> {
     <U> RemoteData<U> map(Function<? super A, ? extends U> f);
 }
 

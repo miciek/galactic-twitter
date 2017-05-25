@@ -4,15 +4,15 @@ import com.michalplachta.galactic.java.db.DbClient;
 import com.michalplachta.galactic.java.logic.Followers;
 import com.michalplachta.galactic.java.values.Citizen;
 import com.michalplachta.galactic.java.values.remotedata.*;
-import javaslang.collection.HashMap;
-import javaslang.collection.Map;
-import javaslang.concurrent.Future;
-import javaslang.control.Option;
-import javaslang.control.Try;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.Map;
+import io.vavr.concurrent.Future;
+import io.vavr.control.Option;
+import io.vavr.control.Try;
 
-import static javaslang.API.*;
-import static javaslang.Patterns.Failure;
-import static javaslang.Patterns.Success;
+import static io.vavr.API.*;
+import static io.vavr.Patterns.$Failure;
+import static io.vavr.Patterns.$Success;
 
 public class FollowersService {
     public static class Version1 {
@@ -80,8 +80,8 @@ public class FollowersService {
                 cachedRemoteFollowers = cachedRemoteFollowers.put(citizenName, new Loading());
             getFollowersAsync(citizenName).onComplete(triedFollowers -> {
                 RemoteFollowersData value = Match(triedFollowers).of(
-                        Case(Success($()), Fetched::new),
-                        Case(Failure($()), ex -> new Failed(ex.toString()))
+                        Case($Success($()), Fetched::new),
+                        Case($Failure($()), ex -> new Failed(ex.toString()))
                 );
                 cachedRemoteFollowers = cachedRemoteFollowers.put(citizenName, value);
             });
@@ -97,8 +97,8 @@ public class FollowersService {
             cache = cache.put(citizenName, new Loading<Integer>());
         getFollowersAsync(citizenName).onComplete(triedFollowers -> {
             RemoteData<Integer> value = Match(triedFollowers).of(
-                    Case(Success($()), Fetched<Integer>::new),
-                    Case(Failure($()), ex -> new Failed<Integer>(ex.toString()))
+                    Case($Success($()), Fetched<Integer>::new),
+                    Case($Failure($()), ex -> new Failed<Integer>(ex.toString()))
             );
             cache = cache.put(citizenName, value);
         });

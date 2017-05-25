@@ -4,12 +4,12 @@ import com.michalplachta.galactic.java.service.FollowersService;
 import com.michalplachta.galactic.java.service.TweetsService;
 import com.michalplachta.galactic.java.values.remotedata.RemoteData;
 import com.michalplachta.galactic.java.values.Tweet;
-import javaslang.collection.List;
+import io.vavr.collection.List;
 
 import java.util.Scanner;
 
 import static com.michalplachta.galactic.java.internal.RemoteDataPatterns.*;
-import static javaslang.API.*;
+import static io.vavr.API.*;
 
 public class GalacticTwitterApp {
     private static void runConsoleTwitter() {

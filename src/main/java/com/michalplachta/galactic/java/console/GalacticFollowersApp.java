@@ -2,16 +2,16 @@ package com.michalplachta.galactic.java.console;
 
 import com.michalplachta.galactic.java.service.FollowersService;
 import com.michalplachta.galactic.java.service.FollowersService.Version4.RemoteFollowersData;
-import javaslang.control.Option;
-import javaslang.control.Try;
+import io.vavr.control.Option;
+import io.vavr.control.Try;
 
 import java.util.Scanner;
 import java.util.function.Function;
 
 import static com.michalplachta.galactic.java.internal.RemoteFollowersDataPatterns.*;
-import static javaslang.API.*;
-import static javaslang.Patterns.Failure;
-import static javaslang.Patterns.Success;
+import static io.vavr.API.*;
+import static io.vavr.Patterns.$Failure;
+import static io.vavr.Patterns.$Success;
 
 public class GalacticFollowersApp {
     private static void runFollowersApp(Function<String, String> getFollowersText) {
@@ -36,8 +36,8 @@ public class GalacticFollowersApp {
     private static String getAndDescribeUsingCacheWithFailures(String citizenName) {
         Option<Try<Integer>> cachedTriedFollowers = FollowersService.Version3.getCachedTriedFollowers(citizenName);
         return cachedTriedFollowers.map(triedFollowers -> Match(triedFollowers).of(
-            Case(Success($()), Object::toString),
-            Case(Failure($()), errorMessage -> String.format("(failed to get followers: %s)", errorMessage))
+            Case($Success($()), Object::toString),
+            Case($Failure($()), errorMessage -> String.format("(failed to get followers: %s)", errorMessage))
         )).getOrElse("(loading...)");
     }
 

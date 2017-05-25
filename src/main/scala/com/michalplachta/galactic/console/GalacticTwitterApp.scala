@@ -5,12 +5,13 @@ import com.michalplachta.galactic.service.{ FollowersService, TweetsService }
 import com.michalplachta.galactic.values.{ RemoteData, Tweet }
 
 import scala.annotation.tailrec
+import scala.io.StdIn
 
 object GalacticTwitterApp extends App {
   @tailrec
   def runConsoleTwitter(): Unit = {
     println("---\nEnter Citizen's name: ")
-    val name = io.StdIn.readLine()
+    val name = StdIn.readLine()
     println(s"Getting followers for $name")
     val followersText = getFollowersText(name)
     val tweets = getTweetWall(name)
