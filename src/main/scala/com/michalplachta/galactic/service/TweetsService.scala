@@ -1,6 +1,7 @@
 package com.michalplachta.galactic.service
 
 import com.michalplachta.galactic.db.DbClient
+import com.michalplachta.galactic.logic.TweetCensorship
 import com.michalplachta.galactic.logic.TweetCensorship.censorTweetsUsingFilters
 import com.michalplachta.galactic.values.RemoteData.{ Failed, Fetched, Loading, NotRequestedYet }
 import com.michalplachta.galactic.values.{ RemoteData, Tweet }
@@ -15,7 +16,7 @@ object TweetsService {
   def getTweetsFor(citizenName: String): RemoteData[List[Tweet]] = {
     if (cachedTweets.get(citizenName).isEmpty) cachedTweets += (citizenName → Loading())
     getTweetsAsync(citizenName)
-      .map(censorTweetsUsingFilters)
+      .map(censorTweetsUsingFilters(TweetCensorship.empireFilters))
       .onComplete { triedTweets ⇒
         val remoteTweets: RemoteData[List[Tweet]] =
           triedTweets match {

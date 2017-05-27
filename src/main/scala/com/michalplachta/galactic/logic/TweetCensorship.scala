@@ -51,7 +51,7 @@ object TweetCensorship {
   case class CensorFilter(shouldManipulate: Tweet ⇒ Boolean, manipulate: Tweet ⇒ Tweet)
   case class CensorStatus(tweet: Tweet, manipulations: Int)
 
-  val censorFilters: List[CensorFilter] = List(
+  val empireFilters: List[CensorFilter] = List(
     CensorFilter(isProDarkSide, addMoreDarkSide),
     CensorFilter(isProLightSide, replaceForceWithDarkSide),
     CensorFilter(isGeneralWisdom, (replaceForceWithDarkSide _).andThen(addMoreDarkSide)),
@@ -63,7 +63,7 @@ object TweetCensorship {
   )
 
   // SOLUTION #5: Logic as data, accumulator as state, folding data to run the logic
-  def censorTweetsUsingFilters(tweets: List[Tweet]): List[Tweet] = {
+  def censorTweetsUsingFilters(censorFilters: List[CensorFilter])(tweets: List[Tweet]): List[Tweet] = {
     tweets.map { originalTweet ⇒
       val initialStatus = CensorStatus(originalTweet, 0)
       censorFilters.foldLeft(initialStatus) { (status, filter) ⇒

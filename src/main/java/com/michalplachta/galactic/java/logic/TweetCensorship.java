@@ -54,7 +54,7 @@ public class TweetCensorship {
         });
     }
 
-    private static class CensorFilter {
+    public static class CensorFilter {
         final Function<Tweet, Boolean> shouldManipulate;
         final Function<Tweet, Tweet> manipulate;
 
@@ -79,7 +79,7 @@ public class TweetCensorship {
         }
     }
 
-    private static final List<CensorFilter> censorFilters = List.of(
+    public static final List<CensorFilter> empireFilters = List.of(
             new CensorFilter(isProDarkSide, addMoreDarkSide),
             new CensorFilter(isProLightSide, replaceForceWithDarkSide),
             new CensorFilter(isGeneralWisdom, replaceForceWithDarkSide.andThen(addMoreDarkSide)),
@@ -91,8 +91,8 @@ public class TweetCensorship {
             new CensorFilter(sacrificeForEmpire)
     );
 
-    public static List<Tweet> censorTweetsUsingFilters(List<Tweet> tweets) {
-        return tweets.map(originalTweet -> {
+    public static Function<List<Tweet>, List<Tweet>> censorTweetsUsingFilters(List<CensorFilter> censorFilters) {
+        return tweets -> tweets.map(originalTweet -> {
             CensorStatus initialStatus = new CensorStatus(originalTweet, 0);
             return censorFilters.foldLeft(initialStatus, applyFilter);
         }).map(status -> status.tweet);

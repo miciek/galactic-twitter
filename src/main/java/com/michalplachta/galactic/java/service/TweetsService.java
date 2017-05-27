@@ -10,17 +10,20 @@ import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.concurrent.Future;
 
+import java.util.function.Function;
+
 import static io.vavr.API.*;
 import static io.vavr.Patterns.$Failure;
 import static io.vavr.Patterns.$Success;
 
 public class TweetsService {
     private static Map<String, RemoteData<List<Tweet>>> cachedTweets = HashMap.empty();
+    private static Function<List<Tweet>, List<Tweet>> censorTweets = TweetCensorship.censorTweetsUsingFilters(TweetCensorship.empireFilters);
 
     public static RemoteData<List<Tweet>> getTweetsFor(String citizenName) {
         if (cachedTweets.get(citizenName).isEmpty()) cachedTweets = cachedTweets.put(citizenName, new Loading<>());
         getTweetsAsync(citizenName)
-                .map(TweetCensorship::censorTweetsUsingFilters)
+                .map(censorTweets)
                 .onComplete(triedTweets -> {
                     RemoteData<List<Tweet>> remoteTweets = Match(triedTweets).of(
                             Case($Success($()), Fetched::new),

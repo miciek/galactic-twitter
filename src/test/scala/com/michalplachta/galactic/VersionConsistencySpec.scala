@@ -6,7 +6,6 @@ import com.michalplachta.galactic.java.logic.{ TweetCensorship ⇒ JavaCensorshi
 import com.michalplachta.galactic.java.values.{ Civilian, Jedi, Rebel, Sith, Stormtrooper, Citizen ⇒ JavaCitizen, Tweet ⇒ JavaTweet }
 import com.michalplachta.galactic.logic.{ TweetCensorship ⇒ ScalaCensorship }
 import com.michalplachta.galactic.values.{ Citizen ⇒ ScalaCitizen }
-
 import org.scalatest.{ Matchers, WordSpec }
 
 import scala.collection.JavaConverters._
@@ -29,8 +28,8 @@ class VersionConsistencySpec extends WordSpec with Matchers {
     }
 
     "have the same censored Tweet lists" in {
-      val javaCensoredTweets: Seq[JavaTweet] = JavaCensorship.censorTweetsUsingFilters(JavaFakeData.tweets).toJavaList().asScala
-      val scalaCensoredTweets: Seq[JavaTweet] = ScalaCensorship.censorTweetsUsingFilters(ScalaFakeData.tweets).map {
+      val javaCensoredTweets: Seq[JavaTweet] = JavaCensorship.censorTweetsUsingFilters(JavaCensorship.empireFilters).apply(JavaFakeData.tweets).toJavaList().asScala
+      val scalaCensoredTweets: Seq[JavaTweet] = ScalaCensorship.censorTweetsUsingFilters(ScalaCensorship.empireFilters)(ScalaFakeData.tweets).map {
         t ⇒ new JavaTweet(t.text, scalaCitizenToJavaCitizen(t.author))
       }
       javaCensoredTweets should equal(scalaCensoredTweets)
