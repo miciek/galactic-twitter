@@ -6,6 +6,7 @@ import io.vavr.collection.List;
 
 import java.util.function.Function;
 
+import static com.michalplachta.galactic.java.internal.PredicateLogic.always;
 import static com.michalplachta.galactic.java.internal.PredicateLogic.and;
 import static com.michalplachta.galactic.java.internal.PredicateLogic.not;
 import static com.michalplachta.galactic.java.logic.CensorshipFunctions.*;
@@ -58,13 +59,8 @@ public class TweetCensorship {
         final Function<Tweet, Boolean> shouldManipulate;
         final Function<Tweet, Tweet> manipulate;
 
-        private CensorFilter(Function<Tweet, Boolean> shouldManipulate, Function<Tweet, Tweet> manipulate) {
+        public CensorFilter(Function<Tweet, Boolean> shouldManipulate, Function<Tweet, Tweet> manipulate) {
             this.shouldManipulate = shouldManipulate;
-            this.manipulate = manipulate;
-        }
-
-        private CensorFilter(Function<Tweet, Tweet> manipulate) {
-            this.shouldManipulate = t -> true;
             this.manipulate = manipulate;
         }
     }
@@ -88,7 +84,7 @@ public class TweetCensorship {
             new CensorFilter(and(not(isProRebellion), not(isProEmpire)),
                              addMoreForce.andThen(addEvenMoreForce).andThen(makeJoke)),
             new CensorFilter(isProEmpire, addMoreDarkSide),
-            new CensorFilter(sacrificeForEmpire)
+            new CensorFilter(always(), sacrificeForEmpire)
     );
 
     public static Function<List<Tweet>, List<Tweet>> censorTweetsUsingFilters(List<CensorFilter> censorFilters) {
