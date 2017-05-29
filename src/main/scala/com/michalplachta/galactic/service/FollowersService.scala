@@ -2,7 +2,7 @@ package com.michalplachta.galactic.service
 
 import com.michalplachta.galactic.db.DbClient
 import com.michalplachta.galactic.logic.Followers
-import com.michalplachta.galactic.logic.Followers.sumFollowers
+import com.michalplachta.galactic.logic.Followers.countFollowers
 import com.michalplachta.galactic.values.RemoteData.Loading
 import com.michalplachta.galactic.values.{ Citizen, RemoteData }
 
@@ -95,6 +95,6 @@ object FollowersService {
     for {
       citizen ← DbClient.getCitizenByName(citizenName)
       followers ← DbClient.getFollowers(citizen).mapTo[List[Citizen]]
-    } yield sumFollowers(followers)
+    } yield countFollowers(followers)
   }
 }

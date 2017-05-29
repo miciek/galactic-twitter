@@ -109,6 +109,6 @@ public class FollowersService {
         Future<? extends Citizen> futureCitizen = DbClient.getCitizenByName(citizenName);
         return futureCitizen
                 .flatMap(DbClient::getFollowers)
-                .map(Followers::sumFollowers);
+                .map(Followers::countFollowers);
     }
 }

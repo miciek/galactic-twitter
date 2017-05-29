@@ -5,13 +5,9 @@ import com.michalplachta.galactic.java.values.Stormtrooper;
 import io.vavr.collection.List;
 import io.vavr.test.Arbitrary;
 import io.vavr.test.Property;
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Random;
-
-import static com.michalplachta.galactic.java.logic.Followers.sumFollowers;
-import static io.vavr.API.println;
+import static com.michalplachta.galactic.java.logic.Followers.countFollowers;
 import static org.junit.Assert.assertEquals;
 
 public class FollowersTest {
@@ -23,7 +19,7 @@ public class FollowersTest {
                         new Stormtrooper("Stormtrooper 1", false),
                         new Stormtrooper("Stormtrooper 2", false));
 
-        assertEquals(2, sumFollowers(stormtroopers));
+        assertEquals(2, countFollowers(stormtroopers));
     }
 
     @Test
@@ -31,7 +27,7 @@ public class FollowersTest {
         List<Stormtrooper> clones =
                 List.range(0, 100).map(id -> new Stormtrooper("Clone " + id.toString(), true));
 
-        assertEquals(0, sumFollowers(clones));
+        assertEquals(0, countFollowers(clones));
     }
 
     // SOLUTION #6: Defining properties and generating property-based tests
@@ -44,9 +40,9 @@ public class FollowersTest {
         Arbitrary<List<Citizen>> clones = Arbitrary.list(clone);
         Arbitrary<List<Citizen>> nonClones = Arbitrary.list(nonClone);
 
-        Property.def("sumFollowers(clones + nonClones) = size(nonClones)")
+        Property.def("countFollowers(clones + nonClones) = size(nonClones)")
                 .forAll(clones, nonClones)
-                .suchThat((c, nc) -> sumFollowers(c.appendAll(nc)) == sumFollowers(nc))
+                .suchThat((c, nc) -> countFollowers(c.appendAll(nc)) == countFollowers(nc))
                 .check()
                 .assertIsSatisfied();
     }

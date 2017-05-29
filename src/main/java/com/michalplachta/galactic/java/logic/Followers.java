@@ -8,12 +8,12 @@ import static io.vavr.API.*;
 
 public class Followers {
     // PROBLEM #4: clones are counted as followers
-    public static int sumFollowersNaive(List<? extends Citizen> followers) {
+    public static int countFollowersNaive(List<? extends Citizen> followers) {
         return followers.size();
     }
 
     // SOLUTION #4: Traversable + pattern matching
-    public static int sumFollowers(List<? extends Citizen> followers) {
+    public static int countFollowers(List<? extends Citizen> followers) {
         return followers.count(f -> Match(f).of(
                 Case(Stormtrooper($(), $(true)), false),
                 Case($(), true)
