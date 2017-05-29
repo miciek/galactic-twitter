@@ -39,7 +39,10 @@ See comments in both [Followers.java](src/main/java/com/michalplachta/galactic/j
 ### Problem #5: Convoluted logic using IFs and vars
 See comments in both [TweetCensorship.java](src/main/java/com/michalplachta/galactic/java/logic/TweetCensorship.java) and [TweetCensorship.scala](src/main/scala/com/michalplachta/galactic/logic/TweetCensorship.scala) files.
 
-### Problem #6: Pure values tangled with JSON annotations
+### Problem #6: Writing tests by providing examples
+See comments in [FollowersTest.java](src/test/java/com/michalplachta/galactic/service/FollowersTest.java).
+
+### Problem #7: Pure values tangled with JSON annotations
 See the problem in [RemoteData.java](src/main/java/com/michalplachta/galactic/java/values/remotedata/RemoteData.java) and potential solution using typeclasses in [RemoteData.scala](src/main/scala/com/michalplachta/galactic/values/RemoteData.scala) and [RemoteDataJsonSupport.scala](src/main/scala/com/michalplachta/galactic/http/RemoteDataJsonSupport.scala).
 
 
