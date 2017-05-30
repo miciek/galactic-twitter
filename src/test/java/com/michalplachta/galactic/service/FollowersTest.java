@@ -40,7 +40,7 @@ public class FollowersTest {
         Arbitrary<List<Citizen>> clones = Arbitrary.list(clone);
         Arbitrary<List<Citizen>> nonClones = Arbitrary.list(nonClone);
 
-        Property.def("countFollowers(clones + nonClones) = size(nonClones)")
+        Property.def("countFollowers(clones + nonClones) = countFollowers(nonClones)")
                 .forAll(clones, nonClones)
                 .suchThat((c, nc) -> countFollowers(c.appendAll(nc)) == countFollowers(nc))
                 .check()
