@@ -1,6 +1,8 @@
 # Galactic Twitter
 This project serves as a practical example of strongly-typed functional approach to creating simple DB-backed asynchronous service. There are two implementations: one in [Java](src/main/java) and one in [Scala](src/main/scala). You can use them to compare functional features in both languages.
 
+The project is a foundation for my talk about functional programming: ["Pragmatist's Guide to Functional Geekery"](http://michalplachta.com/talks/). Slides can be found on [Speaker Deck](https://speakerdeck.com/miciek/pragmatists-guide-to-functional-geekery).
+
 ## Background
 The application simulates some of [Twitter](http://twitter.com) for a [Star Wars](http://www.starwars.com) based domain.
 
